@@ -1,6 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NeonLogo from './components/NeonLogo';
+import HappyPrintingLogo from './components/HappyPrintingLogo';
 import CalligraphySection from './components/CalligraphySection';
 import ProductGrid from './components/ProductGrid';
 import Marquee from './components/Marquee';
@@ -13,16 +14,59 @@ import { Product, ThemeMode } from './types';
 
 const App: React.FC = () => {
   const [view, setView] = useState<'intro' | 'leading' | 'checkout'>('intro');
-  // Default 'light' (Day/Paper mode) as requested previously
+  // Default 'light' (Day/Paper mode)
   const [theme, setTheme] = useState<ThemeMode>('light');
+  
+  // Light Mode Animation State
+  // 0: Init, 1: Draw Strokes, 2: Fill Text, 3: Show Hero Content, 4: Complete
+  const [lightModeStage, setLightModeStage] = useState(0);
+
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [aiMessage, setAiMessage] = useState<string>("文字的重量，取決於墨水的濃度...");
   const [loadingAi, setLoadingAi] = useState(false);
 
-  // Toggle theme and RESET to opening animation
+  // Initial Boot Logic
+  useEffect(() => {
+    // If starting in Light Mode, bypass 'intro' view and start integrated animation
+    if (theme === 'light') {
+      setView('leading');
+      setLightModeStage(1);
+    }
+  }, []);
+
+  // Handle Sequence when stage changes
+  useEffect(() => {
+    if (theme !== 'light') return;
+
+    if (lightModeStage === 1) {
+      // Stage 1: Strokes draw for 2.0s
+      const timer = setTimeout(() => setLightModeStage(2), 2000);
+      return () => clearTimeout(timer);
+    }
+    if (lightModeStage === 2) {
+      // Stage 2: Text fills for 1.5s
+      const timer = setTimeout(() => setLightModeStage(3), 1500);
+      return () => clearTimeout(timer);
+    }
+    if (lightModeStage === 3) {
+      // Stage 3: Content fades in
+      const timer = setTimeout(() => setLightModeStage(4), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [lightModeStage, theme]);
+
+  // Toggle Theme
   const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-    setView('intro');
+    if (theme === 'dark') {
+      // Switching TO Light Mode
+      setTheme('light');
+      setView('leading'); // Immediately show the page, but use state to hide elements
+      setLightModeStage(1); // Start Animation Sequence
+    } else {
+      // Switching TO Dark Mode
+      setTheme('dark');
+      setView('intro'); // Use the overlay for the Cinematic Dark Intro
+    }
   };
 
   const fetchAiMood = async () => {
@@ -55,10 +99,6 @@ const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'auto' });
   };
 
-  if (view === 'intro') {
-    return <OpeningAnimation onComplete={() => setView('leading')} theme={theme} />;
-  }
-
   // Define Theme Colors
   const isDark = theme === 'dark';
   const styles = {
@@ -77,14 +117,24 @@ const App: React.FC = () => {
     return <CheckoutPage product={selectedProduct} onBack={handleBack} theme={theme} />;
   }
 
-  const CornerLabel = ({ char, position }: { char: string, position: string }) => (
-    <div className={`fixed z-[100] font-['Noto_Serif_TC'] text-3xl md:text-5xl font-black select-none pointer-events-none transition-colors duration-500 ${position} ${isDark ? 'text-red-900/60' : 'text-red-700/80'}`}>
-      {char}
-    </div>
-  );
+  const CornerLabel = ({ char, position }: { char: string, position: string }) => {
+    // Light Mode: Fade in during Stage 3
+    // Dark Mode: Always visible (handled by overlay intro)
+    const opacity = !isDark && lightModeStage < 3 ? 'opacity-0' : 'opacity-100';
+    return (
+      <div className={`fixed z-[100] font-['Noto_Serif_TC'] text-3xl md:text-5xl font-black select-none pointer-events-none transition-all duration-1000 ${opacity} ${position} ${isDark ? 'text-red-900/60' : 'text-red-700/80'}`}>
+        {char}
+      </div>
+    );
+  };
 
   return (
-    <div className={`min-h-screen flex flex-col overflow-x-hidden transition-colors duration-700 ${styles.bg} ${styles.selection}`}>
+    <div className={`min-h-screen flex flex-col overflow-x-hidden transition-colors duration-700 ${styles.bg} ${styles.selection} ${view === 'intro' ? 'h-screen overflow-hidden' : ''}`}>
+      
+      {/* Dark Mode Overlay Intro (Only renders when explicitly in intro view) */}
+      {view === 'intro' && isDark && (
+        <OpeningAnimation onComplete={() => setView('leading')} theme={theme} />
+      )}
       
       <ThemeToggle theme={theme} onToggle={toggleTheme} />
 
@@ -96,21 +146,41 @@ const App: React.FC = () => {
 
       {/* Hero Section */}
       <header className={`relative h-screen flex flex-col justify-center items-center px-4 overflow-hidden border-b transition-colors duration-500 ${styles.border}`}>
-        <div className="absolute inset-0 z-0">
+        {/* Background Image / Texture */}
+        <div className={`absolute inset-0 z-0 transition-opacity duration-[2000ms] ${(!isDark && lightModeStage < 3) ? 'opacity-0' : 'opacity-100'}`}>
           <img 
             src="https://images.unsplash.com/photo-1511413342084-c57930101869?q=80&w=2070&auto=format&fit=crop" 
             alt="Hero Background" 
             className={`w-full h-full object-cover scale-110 animate-[pulse_10s_infinite] transition-all duration-1000 ${isDark ? 'opacity-30 brightness-50' : 'opacity-10 brightness-110 saturate-0'}`}
           />
           <div className={`absolute inset-0 transition-colors duration-1000 ${isDark ? 'wkw-gradient' : 'bg-[#f4f4f0]/80 mix-blend-lighten'}`} />
+          {/* Paper Texture Overlay for Light Mode */}
+          {!isDark && (
+            <div className="absolute inset-0 opacity-[0.4] pointer-events-none mix-blend-multiply bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]" />
+          )}
         </div>
 
-        <CalligraphySection text="活版" theme={theme} className="absolute left-20 top-1/2 -translate-y-1/2 hidden lg:block" />
-        <CalligraphySection text="排版" theme={theme} className="absolute right-20 top-1/2 -translate-y-1/2 hidden lg:block" />
+        {/* Side Calligraphy (Vertical) */}
+        <div className={`transition-opacity duration-1000 ${(!isDark && lightModeStage < 3) ? 'opacity-0' : 'opacity-100'}`}>
+          <CalligraphySection text="活版" theme={theme} className="absolute left-20 top-1/2 -translate-y-1/2 hidden lg:block" />
+          <CalligraphySection text="排版" theme={theme} className="absolute right-20 top-1/2 -translate-y-1/2 hidden lg:block" />
+        </div>
 
         <FadeIn className="relative z-10 text-center flex flex-col items-center">
-          <NeonLogo theme={theme} />
-          <div className="max-w-md mt-12">
+          {/* LOGO SWITCHER */}
+          {isDark ? (
+            <NeonLogo theme={theme} />
+          ) : (
+             <HappyPrintingLogo 
+               theme={theme} 
+               animate={true} 
+               stage={lightModeStage} // Pass the integrated stage state
+               className="scale-75 md:scale-100" 
+             />
+          )}
+
+          {/* Hero Text & Button (Fade in last) */}
+          <div className={`max-w-md mt-12 transition-all duration-1000 ${(!isDark && lightModeStage < 3) ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
             <p className={`text-lg md:text-xl font-['Noto_Serif_TC'] italic leading-relaxed mb-12 drop-shadow-sm transition-colors duration-500 ${styles.textSub}`}>
               "如果記憶可以排版成鉛字，我希望這行字永遠不會被拆解。"
             </p>
@@ -127,7 +197,8 @@ const App: React.FC = () => {
           </div>
         </FadeIn>
         
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+        {/* Scroll Indicator */}
+        <div className={`absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 transition-opacity duration-1000 ${(!isDark && lightModeStage < 3) ? 'opacity-0' : 'opacity-100'}`}>
           <span className="text-[10px] uppercase tracking-[0.5em] text-zinc-500 animate-pulse font-['Noto_Serif_TC']">往下滑動以壓印</span>
           <div className={`w-[1px] h-12 bg-gradient-to-b from-transparent to-transparent ${isDark ? 'via-red-900' : 'via-black'}`}></div>
         </div>

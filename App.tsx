@@ -40,8 +40,8 @@ const App: React.FC = () => {
     if (theme === 'dark') return;
 
     if (lightModeStage === 1) {
-      // Stage 1: Strokes draw / Card enters (2.0s)
-      const timer = setTimeout(() => setLightModeStage(2), 2000);
+      // Stage 1: Strokes draw for 2.8s (match animation duration)
+      const timer = setTimeout(() => setLightModeStage(2), 2800);
       return () => clearTimeout(timer);
     }
     if (lightModeStage === 2) {

@@ -1,0 +1,219 @@
+
+import React, { useState } from 'react';
+import NeonLogo from './components/NeonLogo';
+import CalligraphySection from './components/CalligraphySection';
+import ProductGrid from './components/ProductGrid';
+import Marquee from './components/Marquee';
+import OpeningAnimation from './components/OpeningAnimation';
+import CheckoutPage from './components/CheckoutPage';
+import FadeIn from './components/FadeIn';
+import ThemeToggle from './components/ThemeToggle';
+import { GoogleGenAI } from "@google/genai";
+import { Product, ThemeMode } from './types';
+
+const App: React.FC = () => {
+  const [view, setView] = useState<'intro' | 'leading' | 'checkout'>('intro');
+  // Default 'light' (Day/Paper mode) as requested previously
+  const [theme, setTheme] = useState<ThemeMode>('light');
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [aiMessage, setAiMessage] = useState<string>("文字的重量，取決於墨水的濃度...");
+  const [loadingAi, setLoadingAi] = useState(false);
+
+  // Toggle theme and RESET to opening animation
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+    setView('intro');
+  };
+
+  const fetchAiMood = async () => {
+    setLoadingAi(true);
+    try {
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+      const response = await ai.models.generateContent({
+        model: 'gemini-3-flash-preview',
+        contents: "Generate a short, melancholic, Wong Kar-wai style line in Traditional Chinese (Hong Kong cantonese flavor) about letterpress printing, lead type, heavy ink, paper texture, or fading memories. Max 15 words.",
+        config: { temperature: 0.9 }
+      });
+      if (response.text) {
+        setAiMessage(response.text.trim());
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoadingAi(false);
+    }
+  };
+
+  const handleAcquire = (product: Product) => {
+    setSelectedProduct(product);
+    setView('checkout');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleBack = () => {
+    setView('leading');
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  };
+
+  if (view === 'intro') {
+    return <OpeningAnimation onComplete={() => setView('leading')} theme={theme} />;
+  }
+
+  // Define Theme Colors
+  const isDark = theme === 'dark';
+  const styles = {
+    bg: isDark ? 'bg-[#050505]' : 'bg-[#f4f4f0]', // Dark vs Paper White
+    textMain: isDark ? 'text-zinc-200' : 'text-black',
+    textSub: isDark ? 'text-zinc-400' : 'text-zinc-600',
+    border: isDark ? 'border-zinc-900' : 'border-black',
+    accent: isDark ? 'text-red-800' : 'text-red-700',
+    goldAccent: isDark ? 'text-red-900' : 'text-yellow-700', // Gold/Bronze in light mode
+    buttonBg: isDark ? 'bg-red-800 hover:bg-white' : 'bg-red-700 hover:bg-black',
+    selection: isDark ? 'selection:bg-red-600 selection:text-white' : 'selection:bg-black selection:text-white',
+    inputBorder: isDark ? 'focus-within:border-red-900' : 'focus-within:border-yellow-600',
+  };
+
+  if (view === 'checkout') {
+    return <CheckoutPage product={selectedProduct} onBack={handleBack} theme={theme} />;
+  }
+
+  const CornerLabel = ({ char, position }: { char: string, position: string }) => (
+    <div className={`fixed z-[100] font-['Noto_Serif_TC'] text-3xl md:text-5xl font-black select-none pointer-events-none transition-colors duration-500 ${position} ${isDark ? 'text-red-900/60' : 'text-red-700/80'}`}>
+      {char}
+    </div>
+  );
+
+  return (
+    <div className={`min-h-screen flex flex-col overflow-x-hidden transition-colors duration-700 ${styles.bg} ${styles.selection}`}>
+      
+      <ThemeToggle theme={theme} onToggle={toggleTheme} />
+
+      {/* Corner Branding Persistence */}
+      <CornerLabel char="快" position="top-6 left-6" />
+      <CornerLabel char="樂" position="top-6 right-6" />
+      <CornerLabel char="印" position="bottom-6 left-6" />
+      <CornerLabel char="刷" position="bottom-6 right-6" />
+
+      {/* Hero Section */}
+      <header className={`relative h-screen flex flex-col justify-center items-center px-4 overflow-hidden border-b transition-colors duration-500 ${styles.border}`}>
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.unsplash.com/photo-1511413342084-c57930101869?q=80&w=2070&auto=format&fit=crop" 
+            alt="Hero Background" 
+            className={`w-full h-full object-cover scale-110 animate-[pulse_10s_infinite] transition-all duration-1000 ${isDark ? 'opacity-30 brightness-50' : 'opacity-10 brightness-110 saturate-0'}`}
+          />
+          <div className={`absolute inset-0 transition-colors duration-1000 ${isDark ? 'wkw-gradient' : 'bg-[#f4f4f0]/80 mix-blend-lighten'}`} />
+        </div>
+
+        <CalligraphySection text="活版" theme={theme} className="absolute left-20 top-1/2 -translate-y-1/2 hidden lg:block" />
+        <CalligraphySection text="排版" theme={theme} className="absolute right-20 top-1/2 -translate-y-1/2 hidden lg:block" />
+
+        <FadeIn className="relative z-10 text-center flex flex-col items-center">
+          <NeonLogo theme={theme} />
+          <div className="max-w-md mt-12">
+            <p className={`text-lg md:text-xl font-['Noto_Serif_TC'] italic leading-relaxed mb-12 drop-shadow-sm transition-colors duration-500 ${styles.textSub}`}>
+              "如果記憶可以排版成鉛字，我希望這行字永遠不會被拆解。"
+            </p>
+            <button 
+              onClick={() => {
+                const el = document.getElementById('essences');
+                el?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className={`group relative inline-flex items-center justify-center px-12 py-5 overflow-hidden font-bold tracking-widest text-xs uppercase transition-all duration-500 text-black font-['Noto_Serif_TC'] ${styles.buttonBg}`}
+            >
+              <span className={`relative z-10 ${isDark ? 'text-black' : 'text-white'}`}>開始檢字</span>
+              <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity blur-xl"></div>
+            </button>
+          </div>
+        </FadeIn>
+        
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+          <span className="text-[10px] uppercase tracking-[0.5em] text-zinc-500 animate-pulse font-['Noto_Serif_TC']">往下滑動以壓印</span>
+          <div className={`w-[1px] h-12 bg-gradient-to-b from-transparent to-transparent ${isDark ? 'via-red-900' : 'via-black'}`}></div>
+        </div>
+      </header>
+
+      <Marquee theme={theme} />
+
+      <main className={`relative z-10 border-x transition-colors duration-500 mx-0 md:mx-6 ${styles.border} ${styles.bg}`}>
+        <section className={`py-40 px-8 md:px-24 grid md:grid-cols-2 gap-24 items-center border-b transition-colors duration-500 ${styles.border}`}>
+          <FadeIn className="relative">
+            <h2 className={`text-5xl md:text-7xl font-serif font-black italic leading-none mb-10 font-['Noto_Serif_TC'] transition-colors duration-500 ${styles.accent}`}>
+              字裏行間。<br />千鈞一髮。
+            </h2>
+            <p className={`font-['Noto_Serif_TC'] text-lg leading-loose mb-10 max-w-sm transition-colors duration-500 ${styles.textSub}`}>
+              "其實了解一個人並不代表什麼，人是會變的。今天他喜歡宋體，明天他可以喜歡黑體。我們只負責將你此刻的重量壓進紙張的紋理。"
+            </p>
+            <div className={`p-8 border-l-4 backdrop-blur-sm flex flex-col gap-6 transition-colors duration-500 ${isDark ? 'border-red-900 bg-zinc-950/50' : 'border-black bg-white/50'}`}>
+              <p className={`text-sm italic font-['Noto_Serif_TC'] transition-opacity duration-1000 ${styles.textMain} ${loadingAi ? 'opacity-30' : 'opacity-100'}`}>
+                "{aiMessage}"
+              </p>
+              <button 
+                onClick={fetchAiMood}
+                disabled={loadingAi}
+                className={`text-[10px] uppercase tracking-[0.4em] font-black transition-colors self-start border-b pb-1 font-['Noto_Serif_TC'] ${isDark ? 'text-red-700 hover:text-white border-red-900/30' : 'text-red-700 hover:text-black border-red-700/30'}`}
+              >
+                {loadingAi ? '正在鑄字...' : '重排版面'}
+              </button>
+            </div>
+          </FadeIn>
+          
+          <FadeIn delay={200} className="relative group">
+            <div className={`absolute -inset-4 border transition-colors duration-1000 ${isDark ? 'border-zinc-800 group-hover:border-red-900/50' : 'border-zinc-300 group-hover:border-black'}`}></div>
+            <img 
+              src="https://images.unsplash.com/photo-1518112166137-859095696144?q=80&w=2000&auto=format&fit=crop" 
+              alt="Atmospheric" 
+              className={`relative z-10 w-full aspect-[4/5] object-cover transition-all duration-[2000ms] ease-out ${isDark ? 'grayscale brightness-[0.4] group-hover:brightness-100' : 'grayscale contrast-125 brightness-110 group-hover:grayscale-0'}`} 
+            />
+            <div className={`absolute inset-0 z-20 bg-gradient-to-t opacity-60 ${isDark ? 'from-black to-transparent' : 'from-[#f4f4f0] via-transparent to-transparent'}`}></div>
+          </FadeIn>
+        </section>
+
+        <section id="essences" className={`transition-colors duration-500 ${isDark ? 'bg-[#080808]' : 'bg-[#fff]'}`}>
+          <FadeIn className={`px-10 py-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b transition-colors duration-500 ${styles.border}`}>
+            <div>
+              <div className={`text-[10px] uppercase tracking-[0.6em] font-bold mb-2 font-['Noto_Serif_TC'] ${styles.goldAccent}`}>絕版鉛字</div>
+              <h2 className={`text-4xl md:text-5xl font-black italic uppercase tracking-tighter font-['Noto_Serif_TC'] transition-colors duration-500 ${styles.textMain}`}>遺失的字模</h2>
+            </div>
+            <div className={`text-[10px] tracking-widest font-bold uppercase px-4 py-2 border transition-colors duration-500 ${isDark ? 'text-zinc-600 bg-zinc-900/50 border-zinc-800' : 'text-black bg-white border-black'}`}>
+              22.31° N / 114.17° E
+            </div>
+          </FadeIn>
+          <FadeIn delay={300}>
+            <ProductGrid onAcquire={handleAcquire} theme={theme} />
+          </FadeIn>
+        </section>
+
+        <section className={`py-60 px-8 flex flex-col items-center text-center relative overflow-hidden transition-colors duration-500 ${isDark ? 'bg-black' : 'bg-[#e8e6dc]'}`}>
+          <FadeIn className="relative z-10 max-w-3xl">
+            <h3 className={`text-3xl md:text-5xl font-['Noto_Serif_TC'] italic mb-16 leading-tight transition-colors duration-500 ${isDark ? 'text-zinc-200' : 'text-black'}`}>"以前我以為有一種墨一開始印就會滲到紙背，原來它什麼痕跡都沒有留下，那行字一開始就已經乾了。"</h3>
+            <p className={`mb-12 font-['Noto_Serif_TC'] tracking-widest text-sm uppercase transition-colors duration-500 ${styles.textSub}`}>輸入你的地址，我們會把那塊鉛字寄給你。</p>
+            <div className={`flex flex-col md:flex-row gap-0 w-full border transition-all duration-700 ${styles.border} ${styles.inputBorder}`}>
+              <input 
+                type="email" 
+                placeholder="LONELY.SOUL@KOWLOON.COM" 
+                className={`flex-grow bg-transparent px-10 py-6 outline-none font-serif text-lg transition-colors duration-500 ${styles.textMain} placeholder:opacity-30`}
+              />
+              <button className={`px-16 py-6 font-black uppercase tracking-[0.4em] text-xs transition-all duration-500 font-['Noto_Serif_TC'] ${isDark ? 'bg-red-900 text-black hover:bg-white' : 'bg-black text-white hover:bg-red-700'}`}>
+                郵寄鉛華
+              </button>
+            </div>
+          </FadeIn>
+        </section>
+      </main>
+
+      <footer className={`py-32 px-10 border-t relative z-20 transition-colors duration-500 ${styles.border} ${isDark ? 'bg-zinc-950' : 'bg-[#f4f4f0]'}`}>
+        <div className={`max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10 text-[9px] tracking-[0.4em] font-black uppercase font-['Noto_Serif_TC'] ${styles.textSub}`}>
+          <div className="flex items-center gap-8">
+            <span>© 1960-2046</span>
+            <span className={`w-8 h-[1px] ${isDark ? 'bg-zinc-800' : 'bg-black'}`}></span>
+            <span>快樂活版印刷公司</span>
+          </div>
+          <div className={`${isDark ? 'text-red-950' : 'text-red-700'} tracking-[0.8em]`}>專為傷心人排版</div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+export default App;

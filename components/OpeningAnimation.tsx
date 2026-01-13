@@ -25,7 +25,7 @@ const OpeningAnimation: React.FC<OpeningAnimationProps> = ({ onComplete, theme }
       setIsFadingOut(true);
     }, 5000);
     // Stage 4: Complete and unmount
-    const timer4 = setTimeout(() => onComplete(), 6500);
+    const timer4 = setTimeout(() => onComplete(), 5200);
 
     return () => {
       [timer1, timer2, timer3, timer4].forEach(clearTimeout);

@@ -14,4 +14,4 @@ export enum LayoutMode {
   CINEMATIC = 'CINEMATIC'
 }
 
-export type ThemeMode = 'dark' | 'light';
+export type ThemeMode = 'dark' | 'light' | 'card';

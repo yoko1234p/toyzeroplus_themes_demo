@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import NeonLogo from './components/NeonLogo';
 import HappyPrintingLogo from './components/HappyPrintingLogo';
+import GreetingCardKV from './components/GreetingCardKV';
 import CalligraphySection from './components/CalligraphySection';
 import ProductGrid from './components/ProductGrid';
 import Marquee from './components/Marquee';
@@ -17,8 +18,8 @@ const App: React.FC = () => {
   // Default 'light' (Day/Paper mode)
   const [theme, setTheme] = useState<ThemeMode>('light');
   
-  // Light Mode Animation State
-  // 0: Init, 1: Draw Strokes, 2: Fill Text, 3: Show Hero Content, 4: Complete
+  // Animation State for Light/Card modes
+  // 0: Init, 1: Draw Strokes/Card Enter, 2: Fill Text, 3: Show Hero Content, 4: Complete
   const [lightModeStage, setLightModeStage] = useState(0);
 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -27,24 +28,24 @@ const App: React.FC = () => {
 
   // Initial Boot Logic
   useEffect(() => {
-    // If starting in Light Mode, bypass 'intro' view and start integrated animation
-    if (theme === 'light') {
+    // If starting in Light or Card Mode, bypass 'intro' view and start integrated animation
+    if (theme !== 'dark') {
       setView('leading');
       setLightModeStage(1);
     }
   }, []);
 
-  // Handle Sequence when stage changes
+  // Handle Sequence when stage changes (For Light and Card modes)
   useEffect(() => {
-    if (theme !== 'light') return;
+    if (theme === 'dark') return;
 
     if (lightModeStage === 1) {
-      // Stage 1: Strokes draw for 2.0s
+      // Stage 1: Strokes draw / Card enters (2.0s)
       const timer = setTimeout(() => setLightModeStage(2), 2000);
       return () => clearTimeout(timer);
     }
     if (lightModeStage === 2) {
-      // Stage 2: Text fills for 1.5s
+      // Stage 2: Text fills (1.5s)
       const timer = setTimeout(() => setLightModeStage(3), 1500);
       return () => clearTimeout(timer);
     }
@@ -55,17 +56,20 @@ const App: React.FC = () => {
     }
   }, [lightModeStage, theme]);
 
-  // Toggle Theme
-  const toggleTheme = () => {
-    if (theme === 'dark') {
-      // Switching TO Light Mode
-      setTheme('light');
-      setView('leading'); // Immediately show the page, but use state to hide elements
-      setLightModeStage(1); // Start Animation Sequence
+  // Theme Switch Handler
+  const handleThemeChange = (newTheme: ThemeMode) => {
+    setTheme(newTheme);
+    
+    if (newTheme === 'dark') {
+      // Switching TO Dark Mode -> Trigger Cinematic Intro
+      setView('intro');
+      setLightModeStage(0);
     } else {
-      // Switching TO Dark Mode
-      setTheme('dark');
-      setView('intro'); // Use the overlay for the Cinematic Dark Intro
+      // Switching TO Light or Card Mode -> Reset to leading view and restart animation sequence
+      setView('leading');
+      setLightModeStage(0);
+      // Small delay to allow reset to take effect before starting animation
+      setTimeout(() => setLightModeStage(1), 50);
     }
   };
 
@@ -107,7 +111,7 @@ const App: React.FC = () => {
     textSub: isDark ? 'text-zinc-400' : 'text-zinc-600',
     border: isDark ? 'border-zinc-900' : 'border-black',
     accent: isDark ? 'text-red-800' : 'text-red-700',
-    goldAccent: isDark ? 'text-red-900' : 'text-yellow-700', // Gold/Bronze in light mode
+    goldAccent: isDark ? 'text-red-900' : 'text-yellow-700',
     buttonBg: isDark ? 'bg-red-800 hover:bg-white' : 'bg-red-700 hover:bg-black',
     selection: isDark ? 'selection:bg-red-600 selection:text-white' : 'selection:bg-black selection:text-white',
     inputBorder: isDark ? 'focus-within:border-red-900' : 'focus-within:border-yellow-600',
@@ -118,8 +122,7 @@ const App: React.FC = () => {
   }
 
   const CornerLabel = ({ char, position }: { char: string, position: string }) => {
-    // Light Mode: Fade in during Stage 3
-    // Dark Mode: Always visible (handled by overlay intro)
+    // Fade in during Stage 3 for non-dark modes
     const opacity = !isDark && lightModeStage < 3 ? 'opacity-0' : 'opacity-100';
     return (
       <div className={`fixed z-[100] font-['Noto_Serif_TC'] text-3xl md:text-5xl font-black select-none pointer-events-none transition-all duration-1000 ${opacity} ${position} ${isDark ? 'text-red-900/60' : 'text-red-700/80'}`}>
@@ -131,12 +134,12 @@ const App: React.FC = () => {
   return (
     <div className={`min-h-screen flex flex-col overflow-x-hidden transition-colors duration-700 ${styles.bg} ${styles.selection} ${view === 'intro' ? 'h-screen overflow-hidden' : ''}`}>
       
-      {/* Dark Mode Overlay Intro (Only renders when explicitly in intro view) */}
+      {/* Dark Mode Overlay Intro */}
       {view === 'intro' && isDark && (
         <OpeningAnimation onComplete={() => setView('leading')} theme={theme} />
       )}
       
-      <ThemeToggle theme={theme} onToggle={toggleTheme} />
+      <ThemeToggle theme={theme} onToggle={handleThemeChange} />
 
       {/* Corner Branding Persistence */}
       <CornerLabel char="快" position="top-6 left-6" />
@@ -154,7 +157,7 @@ const App: React.FC = () => {
             className={`w-full h-full object-cover scale-110 animate-[pulse_10s_infinite] transition-all duration-1000 ${isDark ? 'opacity-30 brightness-50' : 'opacity-10 brightness-110 saturate-0'}`}
           />
           <div className={`absolute inset-0 transition-colors duration-1000 ${isDark ? 'wkw-gradient' : 'bg-[#f4f4f0]/80 mix-blend-lighten'}`} />
-          {/* Paper Texture Overlay for Light Mode */}
+          {/* Paper Texture Overlay for Light/Card Mode */}
           {!isDark && (
             <div className="absolute inset-0 opacity-[0.4] pointer-events-none mix-blend-multiply bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]" />
           )}
@@ -167,17 +170,21 @@ const App: React.FC = () => {
         </div>
 
         <FadeIn className="relative z-10 text-center flex flex-col items-center">
-          {/* LOGO SWITCHER */}
-          {isDark ? (
-            <NeonLogo theme={theme} />
-          ) : (
-             <HappyPrintingLogo 
-               theme={theme} 
-               animate={true} 
-               stage={lightModeStage} // Pass the integrated stage state
-               className="scale-75 md:scale-100" 
-             />
-          )}
+          {/* KEY VISUAL SWITCHER */}
+          <div className="flex items-center justify-center min-h-[400px]">
+            {theme === 'dark' ? (
+              <NeonLogo theme={theme} />
+            ) : theme === 'card' ? (
+              <GreetingCardKV stage={lightModeStage} />
+            ) : (
+              <HappyPrintingLogo 
+                theme={theme} 
+                animate={true} 
+                stage={lightModeStage} 
+                className="scale-75 md:scale-100" 
+              />
+            )}
+          </div>
 
           {/* Hero Text & Button (Fade in last) */}
           <div className={`max-w-md mt-12 transition-all duration-1000 ${(!isDark && lightModeStage < 3) ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>

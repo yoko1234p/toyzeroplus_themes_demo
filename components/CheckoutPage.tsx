@@ -32,14 +32,14 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ product, onBack, theme }) =
   if (purchased) {
     return (
       <div className={`min-h-screen flex flex-col items-center justify-center p-8 text-center ${styles.bg}`}>
-        <div className="font-['Noto_Serif_TC'] text-8xl text-red-700 mb-8 animate-pulse">遺忘</div>
-        <h2 className={`text-4xl font-serif italic mb-4 font-['Noto_Serif_TC'] ${styles.textMain}`}>交易已永恆</h2>
-        <p className={`font-['Noto_Serif_TC'] max-w-md mb-12 ${styles.textSub}`}>
+        <div className="font-lhkk text-8xl text-red-700 mb-8 animate-pulse">遺忘</div>
+        <h2 className={`text-4xl font-serif italic mb-4 font-lhkk ${styles.textMain}`}>交易已永恆</h2>
+        <p className={`font-lhkk max-w-md mb-12 ${styles.textSub}`}>
           "這件物品現在屬於你了。但想擁有它的那份記憶......它屬於這座城市。"
         </p>
         <button 
           onClick={onBack}
-          className={`border ${styles.border} px-12 py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-900 hover:text-white transition-all font-['Noto_Serif_TC'] ${styles.textMain}`}
+          className={`border ${styles.border} px-12 py-4 text-[10px] uppercase tracking-widest font-bold hover:bg-zinc-900 hover:text-white transition-all font-lhkk ${styles.textMain}`}
         >
           回到雨中
         </button>
@@ -62,18 +62,18 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ product, onBack, theme }) =
         <div className="absolute top-12 left-12">
           <button onClick={onBack} className={`flex items-center gap-4 group ${isDark ? 'text-white' : 'text-black'}`}>
             <span className="text-2xl group-hover:-translate-x-2 transition-transform">←</span>
-            <span className="text-[10px] uppercase tracking-[0.3em] font-bold font-['Noto_Serif_TC']">撤回</span>
+            <span className="text-[10px] uppercase tracking-[0.3em] font-bold font-lhkk">撤回</span>
           </button>
         </div>
 
         <div className="absolute bottom-12 left-12 right-12">
-          <div className={`writing-vertical absolute -right-4 bottom-0 text-9xl font-['Noto_Serif_TC'] ${isDark ? 'text-white opacity-10' : 'text-red-900 opacity-5'}`}>
+          <div className={`writing-vertical absolute -right-4 bottom-0 text-9xl font-lhkk ${isDark ? 'text-white opacity-10' : 'text-red-900 opacity-5'}`}>
             {product.calligraphy}
           </div>
-          <h1 className={`text-5xl md:text-7xl font-black italic uppercase tracking-tighter mb-4 font-['Noto_Serif_TC'] ${styles.accent}`}>
+          <h1 className={`text-5xl md:text-7xl font-black italic uppercase tracking-tighter mb-4 font-lhkk ${styles.accent}`}>
             {product.name}
           </h1>
-          <p className={`font-['Noto_Serif_TC'] italic max-w-sm text-lg ${isDark ? 'text-zinc-400' : 'text-black'}`}>
+          <p className={`font-lhkk italic max-w-sm text-lg ${isDark ? 'text-zinc-400' : 'text-black'}`}>
             "{product.description}"
           </p>
         </div>
@@ -83,9 +83,9 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ product, onBack, theme }) =
       <div className="lg:w-1/2 p-8 md:p-24 flex flex-col justify-center">
         <div className="max-w-md w-full mx-auto">
           <header className={`mb-12 border-b pb-8 ${styles.border}`}>
-            <div className={`text-[10px] uppercase tracking-[0.5em] mb-2 font-['Noto_Serif_TC'] ${styles.textSub}`}>結帳程序</div>
+            <div className={`text-[10px] uppercase tracking-[0.5em] mb-2 font-lhkk ${styles.textSub}`}>結帳程序</div>
             <div className="flex justify-between items-end">
-              <h2 className={`text-3xl font-serif italic font-['Noto_Serif_TC'] ${styles.textMain}`}>最終清單</h2>
+              <h2 className={`text-3xl font-serif italic font-lhkk ${styles.textMain}`}>最終清單</h2>
               <span className="text-red-600 font-mono text-xl">{product.price}</span>
             </div>
           </header>
@@ -93,7 +93,7 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ product, onBack, theme }) =
           <form onSubmit={handlePurchase} className="space-y-8">
             <div className="space-y-6">
               <div className={`group border-b transition-colors py-2 ${styles.border} ${styles.inputBorder}`}>
-                <label className={`block text-[10px] uppercase tracking-widest mb-1 transition-colors font-['Noto_Serif_TC'] ${styles.textSub} group-focus-within:text-red-500`}>
+                <label className={`block text-[10px] uppercase tracking-widest mb-1 transition-colors font-lhkk ${styles.textSub} group-focus-within:text-red-500`}>
                   身份 / 電郵
                 </label>
                 <input 
@@ -105,20 +105,20 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ product, onBack, theme }) =
               </div>
 
               <div className={`group border-b transition-colors py-2 ${styles.border} ${styles.inputBorder}`}>
-                <label className={`block text-[10px] uppercase tracking-widest mb-1 transition-colors font-['Noto_Serif_TC'] ${styles.textSub} group-focus-within:text-red-500`}>
+                <label className={`block text-[10px] uppercase tracking-widest mb-1 transition-colors font-lhkk ${styles.textSub} group-focus-within:text-red-500`}>
                   傳送座標
                 </label>
                 <input 
                   required
                   type="text" 
                   placeholder="九龍 2046 號"
-                  className={`w-full bg-transparent outline-none text-xl font-['Noto_Serif_TC'] py-2 placeholder:opacity-20 ${styles.textMain}`}
+                  className={`w-full bg-transparent outline-none text-xl font-lhkk py-2 placeholder:opacity-20 ${styles.textMain}`}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-8">
                  <div className={`group border-b transition-colors py-2 ${styles.border} ${styles.inputBorder}`}>
-                  <label className={`block text-[10px] uppercase tracking-widest mb-1 transition-colors font-['Noto_Serif_TC'] ${styles.textSub} group-focus-within:text-red-500`}>
+                  <label className={`block text-[10px] uppercase tracking-widest mb-1 transition-colors font-lhkk ${styles.textSub} group-focus-within:text-red-500`}>
                     遺跡代碼
                   </label>
                   <input 
@@ -129,7 +129,7 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ product, onBack, theme }) =
                   />
                 </div>
                 <div className={`group border-b transition-colors py-2 ${styles.border} ${styles.inputBorder}`}>
-                  <label className={`block text-[10px] uppercase tracking-widest mb-1 transition-colors font-['Noto_Serif_TC'] ${styles.textSub} group-focus-within:text-red-500`}>
+                  <label className={`block text-[10px] uppercase tracking-widest mb-1 transition-colors font-lhkk ${styles.textSub} group-focus-within:text-red-500`}>
                     期限
                   </label>
                   <input 
@@ -145,11 +145,11 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ product, onBack, theme }) =
             <div className="pt-12">
               <button 
                 type="submit"
-                className={`w-full py-6 font-black uppercase tracking-[0.4em] text-sm transition-all shadow-[0_10px_30px_rgba(185,28,28,0.3)] font-['Noto_Serif_TC'] ${styles.button}`}
+                className={`w-full py-6 font-black uppercase tracking-[0.4em] text-sm transition-all shadow-[0_10px_30px_rgba(185,28,28,0.3)] font-lhkk ${styles.button}`}
               >
                 封存記憶
               </button>
-              <p className={`mt-6 text-center text-[10px] uppercase tracking-widest font-['Noto_Serif_TC'] ${styles.textSub}`}>
+              <p className={`mt-6 text-center text-[10px] uppercase tracking-widest font-lhkk ${styles.textSub}`}>
                 通過虛空安全加密。雨停後不設退換。
               </p>
             </div>

@@ -28,7 +28,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ theme, onToggle }) => {
         <select
           value={theme}
           onChange={(e) => onToggle(e.target.value as ThemeMode)}
-          className={`appearance-none pl-8 pr-12 py-3 outline-none border font-['Noto_Serif_TC'] font-bold text-xs tracking-widest uppercase cursor-pointer transition-all duration-500 ${getSelectStyles()}`}
+          className={`appearance-none pl-8 pr-12 py-3 outline-none border font-lhkk font-bold text-xs tracking-widest uppercase cursor-pointer transition-all duration-500 ${getSelectStyles()}`}
         >
           <option value="light">白晝模式 (Day)</option>
           <option value="dark">黑夜模式 (Night)</option>

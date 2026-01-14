@@ -10,6 +10,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Noto+Serif+TC:wght@200;500;900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
     <style>
+        /* 自定義字體 - 龍蝦快樂 */
+        @font-face {
+            font-family: 'LHKK';
+            src: url('/fonts/LHKK7000v1.04.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
         @keyframes flicker {
             0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 40px #ff00de, 0 0 80px #ff00de, 0 0 90px #ff00de, 0 0 100px #ff00de, 0 0 150px #ff00de; }
             20%, 24%, 55% { text-shadow: none; }
@@ -27,6 +35,10 @@
         }
         .wkw-gradient {
             background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(20,0,0,0.4), rgba(0,20,20,0.6));
+        }
+        /* 應用自定義字體到中文文字 */
+        .font-lhkk {
+            font-family: 'LHKK', 'Noto Serif TC', serif;
         }
     </style>
 <script type="importmap">

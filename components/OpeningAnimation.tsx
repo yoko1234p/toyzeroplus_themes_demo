@@ -32,7 +32,7 @@ const OpeningAnimation: React.FC<OpeningAnimationProps> = ({ onComplete, theme }
     };
   }, [onComplete]);
 
-  const cornerClass = "fixed z-[110] font-['Noto_Serif_TC'] text-5xl md:text-7xl font-black select-none transition-all duration-1000";
+  const cornerClass = "fixed z-[110] font-lhkk text-5xl md:text-7xl font-black select-none transition-all duration-1000";
   
   return (
     <div className={`fixed inset-0 z-[200] flex flex-col items-center justify-center overflow-hidden transition-opacity duration-[1500ms] ease-in-out bg-[#050505] ${isFadingOut ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
@@ -45,7 +45,7 @@ const OpeningAnimation: React.FC<OpeningAnimationProps> = ({ onComplete, theme }
 
       {/* Subtitle / Quote in Center */}
       <div className={`absolute transition-all duration-[1500ms] px-8 text-center ${stage >= 2 ? 'opacity-100 translate-y-0 blur-0' : 'opacity-0 translate-y-4 blur-sm'}`}>
-        <p className="font-['Noto_Serif_TC'] font-bold text-lg md:text-2xl tracking-[0.3em] leading-loose text-zinc-200">
+        <p className="font-lhkk font-bold text-lg md:text-2xl tracking-[0.3em] leading-loose text-zinc-200">
           所有的記憶<br/>都是潮濕的油墨
         </p>
       </div>

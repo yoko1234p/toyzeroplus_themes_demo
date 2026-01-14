@@ -10,21 +10,27 @@ import ProductGrid from './components/ProductGrid';
 import Marquee from './components/Marquee';
 import OpeningAnimation from './components/OpeningAnimation';
 import CheckoutPage from './components/CheckoutPage';
+import ProductPage from './components/ProductPage';
 import FadeIn from './components/FadeIn';
 import ThemeToggle from './components/ThemeToggle';
 import { GoogleGenAI } from "@google/genai";
 import { Product, ThemeMode } from './types';
+import { MaximProduct } from './data/products';
+
+// 控制是否顯示文字內容區塊（字裏行間、以前我以為...等）
+const SHOW_TEXT_SECTIONS = false;
 
 const App: React.FC = () => {
-  const [view, setView] = useState<'intro' | 'leading' | 'checkout'>('intro');
+  const [view, setView] = useState<'intro' | 'leading' | 'checkout' | 'product'>('intro');
   // Default 'card' (Greeting Card Preview mode)
   const [theme, setTheme] = useState<ThemeMode>('card');
-  
+
   // Animation State for Light/Card modes
   // 0: Init, 1: Draw Strokes/Card Enter, 2: Fill Text, 3: Show Hero Content, 4: Complete
   const [lightModeStage, setLightModeStage] = useState(0);
 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedMaximProduct, setSelectedMaximProduct] = useState<MaximProduct | null>(null);
   const [aiMessage, setAiMessage] = useState<string>("文字的重量，取決於墨水的濃度...");
   const [loadingAi, setLoadingAi] = useState(false);
 
@@ -105,7 +111,18 @@ const App: React.FC = () => {
 
   const handleBack = () => {
     setView('leading');
+    setSelectedMaximProduct(null);
+    // 返回時顯示已完成動畫的 KV（跳過動畫）
+    if (theme !== 'dark') {
+      setLightModeStage(4);
+    }
     window.scrollTo({ top: 0, behavior: 'auto' });
+  };
+
+  const handleMaximProductClick = (product: MaximProduct) => {
+    setSelectedMaximProduct(product);
+    setView('product');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Define Theme Colors
@@ -159,11 +176,15 @@ const App: React.FC = () => {
     return <CheckoutPage product={selectedProduct} onBack={handleBack} theme={theme} />;
   }
 
+  if (view === 'product' && selectedMaximProduct) {
+    return <ProductPage product={selectedMaximProduct} onBack={handleBack} onProductClick={handleMaximProductClick} theme={theme} />;
+  }
+
   const CornerLabel = ({ char, position }: { char: string, position: string }) => {
     // Fade in during Stage 3 for non-dark modes
     const opacity = !isDark && lightModeStage < 3 ? 'opacity-0' : 'opacity-100';
     return (
-      <div className={`fixed z-[100] font-['Noto_Serif_TC'] text-3xl md:text-5xl font-black select-none pointer-events-none transition-all duration-1000 ${opacity} ${position} ${isDark ? 'text-red-900/60' : 'text-red-700/80'}`}>
+      <div className={`fixed z-[100] font-lhkk text-3xl md:text-5xl font-black select-none pointer-events-none transition-all duration-1000 ${opacity} ${position} ${isDark ? 'text-red-900/60' : 'text-red-700/80'}`}>
         {char}
       </div>
     );
@@ -250,7 +271,10 @@ const App: React.FC = () => {
         </header>
 
         {/* Seal Mode Content Sections */}
-        <SealModeSections />
+        <SealModeSections
+          onProductClick={handleMaximProductClick}
+          showTextSections={SHOW_TEXT_SECTIONS}
+        />
       </div>
     );
   }
@@ -312,7 +336,7 @@ const App: React.FC = () => {
 
           {/* Hero Text & Button (Fade in last) */}
           <div className={`max-w-md mt-12 transition-all duration-1000 ${(!isDark && lightModeStage < 3) ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
-            <p className={`text-lg md:text-xl font-['Noto_Serif_TC'] italic leading-relaxed mb-12 drop-shadow-sm transition-colors duration-500 ${styles.textSub}`}>
+            <p className={`text-lg md:text-xl font-lhkk italic leading-relaxed mb-12 drop-shadow-sm transition-colors duration-500 ${styles.textSub}`}>
               "如果記憶可以排版成鉛字，我希望這行字永遠不會被拆解。"
             </p>
             <button 
@@ -320,7 +344,7 @@ const App: React.FC = () => {
                 const el = document.getElementById('essences');
                 el?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className={`group relative inline-flex items-center justify-center px-12 py-5 overflow-hidden font-bold tracking-widest text-xs uppercase transition-all duration-500 text-black font-['Noto_Serif_TC'] ${styles.buttonBg}`}
+              className={`group relative inline-flex items-center justify-center px-12 py-5 overflow-hidden font-bold tracking-widest text-xs uppercase transition-all duration-500 text-black font-lhkk ${styles.buttonBg}`}
             >
               <span className={`relative z-10 ${isDark ? 'text-black' : 'text-white'}`}>開始檢字</span>
               <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity blur-xl"></div>
@@ -330,7 +354,7 @@ const App: React.FC = () => {
         
         {/* Scroll Indicator */}
         <div className={`absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 transition-opacity duration-1000 ${(!isDark && lightModeStage < 3) ? 'opacity-0' : 'opacity-100'}`}>
-          <span className="text-[10px] uppercase tracking-[0.5em] text-zinc-500 animate-pulse font-['Noto_Serif_TC']">往下滑動以壓印</span>
+          <span className="text-[10px] uppercase tracking-[0.5em] text-zinc-500 animate-pulse font-lhkk">往下滑動以壓印</span>
           <div className={`w-[1px] h-12 bg-gradient-to-b from-transparent to-transparent ${isDark ? 'via-red-900' : 'via-black'}`}></div>
         </div>
       </header>
@@ -338,74 +362,80 @@ const App: React.FC = () => {
       <Marquee theme={theme} />
 
       <main className={`relative z-10 border-x transition-colors duration-500 mx-0 md:mx-6 ${styles.border} ${styles.bg}`}>
-        <section className={`py-40 px-8 md:px-24 grid md:grid-cols-2 gap-24 items-center border-b transition-colors duration-500 ${styles.border}`}>
-          <FadeIn className="relative">
-            <h2 className={`text-5xl md:text-7xl font-serif font-black italic leading-none mb-10 font-['Noto_Serif_TC'] transition-colors duration-500 ${styles.accent}`}>
-              字裏行間。<br />千鈞一髮。
-            </h2>
-            <p className={`font-['Noto_Serif_TC'] text-lg leading-loose mb-10 max-w-sm transition-colors duration-500 ${styles.textSub}`}>
-              "其實了解一個人並不代表什麼，人是會變的。今天他喜歡宋體，明天他可以喜歡黑體。我們只負責將你此刻的重量壓進紙張的紋理。"
-            </p>
-            <div className={`p-8 border-l-4 backdrop-blur-sm flex flex-col gap-6 transition-colors duration-500 ${isDark ? 'border-red-900 bg-zinc-950/50' : 'border-black bg-white/50'}`}>
-              <p className={`text-sm italic font-['Noto_Serif_TC'] transition-opacity duration-1000 ${styles.textMain} ${loadingAi ? 'opacity-30' : 'opacity-100'}`}>
-                "{aiMessage}"
+        {/* 字裏行間 Section - Conditionally Hidden */}
+        {SHOW_TEXT_SECTIONS && (
+          <section className={`py-40 px-8 md:px-24 grid md:grid-cols-2 gap-24 items-center border-b transition-colors duration-500 ${styles.border}`}>
+            <FadeIn className="relative">
+              <h2 className={`text-5xl md:text-7xl font-serif font-black italic leading-none mb-10 font-lhkk transition-colors duration-500 ${styles.accent}`}>
+                字裏行間。<br />千鈞一髮。
+              </h2>
+              <p className={`font-lhkk text-lg leading-loose mb-10 max-w-sm transition-colors duration-500 ${styles.textSub}`}>
+                "其實了解一個人並不代表什麼，人是會變的。今天他喜歡宋體，明天他可以喜歡黑體。我們只負責將你此刻的重量壓進紙張的紋理。"
               </p>
-              <button 
-                onClick={fetchAiMood}
-                disabled={loadingAi}
-                className={`text-[10px] uppercase tracking-[0.4em] font-black transition-colors self-start border-b pb-1 font-['Noto_Serif_TC'] ${isDark ? 'text-red-700 hover:text-white border-red-900/30' : 'text-red-700 hover:text-black border-red-700/30'}`}
-              >
-                {loadingAi ? '正在鑄字...' : '重排版面'}
-              </button>
-            </div>
-          </FadeIn>
-          
-          <FadeIn delay={200} className="relative group">
-            <div className={`absolute -inset-4 border transition-colors duration-1000 ${isDark ? 'border-zinc-800 group-hover:border-red-900/50' : 'border-zinc-300 group-hover:border-black'}`}></div>
-            <img 
-              src="https://images.unsplash.com/photo-1518112166137-859095696144?q=80&w=2000&auto=format&fit=crop" 
-              alt="Atmospheric" 
-              className={`relative z-10 w-full aspect-[4/5] object-cover transition-all duration-[2000ms] ease-out ${isDark ? 'grayscale brightness-[0.4] group-hover:brightness-100' : 'grayscale contrast-125 brightness-110 group-hover:grayscale-0'}`} 
-            />
-            <div className={`absolute inset-0 z-20 bg-gradient-to-t opacity-60 ${isDark ? 'from-black to-transparent' : 'from-[#f4f4f0] via-transparent to-transparent'}`}></div>
-          </FadeIn>
-        </section>
+              <div className={`p-8 border-l-4 backdrop-blur-sm flex flex-col gap-6 transition-colors duration-500 ${isDark ? 'border-red-900 bg-zinc-950/50' : 'border-black bg-white/50'}`}>
+                <p className={`text-sm italic font-lhkk transition-opacity duration-1000 ${styles.textMain} ${loadingAi ? 'opacity-30' : 'opacity-100'}`}>
+                  "{aiMessage}"
+                </p>
+                <button
+                  onClick={fetchAiMood}
+                  disabled={loadingAi}
+                  className={`text-[10px] uppercase tracking-[0.4em] font-black transition-colors self-start border-b pb-1 font-lhkk ${isDark ? 'text-red-700 hover:text-white border-red-900/30' : 'text-red-700 hover:text-black border-red-700/30'}`}
+                >
+                  {loadingAi ? '正在鑄字...' : '重排版面'}
+                </button>
+              </div>
+            </FadeIn>
+
+            <FadeIn delay={200} className="relative group">
+              <div className={`absolute -inset-4 border transition-colors duration-1000 ${isDark ? 'border-zinc-800 group-hover:border-red-900/50' : 'border-zinc-300 group-hover:border-black'}`}></div>
+              <img
+                src="https://images.unsplash.com/photo-1518112166137-859095696144?q=80&w=2000&auto=format&fit=crop"
+                alt="Atmospheric"
+                className={`relative z-10 w-full aspect-[4/5] object-cover transition-all duration-[2000ms] ease-out ${isDark ? 'grayscale brightness-[0.4] group-hover:brightness-100' : 'grayscale contrast-125 brightness-110 group-hover:grayscale-0'}`}
+              />
+              <div className={`absolute inset-0 z-20 bg-gradient-to-t opacity-60 ${isDark ? 'from-black to-transparent' : 'from-[#f4f4f0] via-transparent to-transparent'}`}></div>
+            </FadeIn>
+          </section>
+        )}
 
         <section id="essences" className={`transition-colors duration-500 ${isDark ? 'bg-[#080808]' : 'bg-[#fff]'}`}>
           <FadeIn className={`px-10 py-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b transition-colors duration-500 ${styles.border}`}>
             <div>
-              <div className={`text-[10px] uppercase tracking-[0.6em] font-bold mb-2 font-['Noto_Serif_TC'] ${styles.goldAccent}`}>絕版鉛字</div>
-              <h2 className={`text-4xl md:text-5xl font-black italic uppercase tracking-tighter font-['Noto_Serif_TC'] transition-colors duration-500 ${styles.textMain}`}>遺失的字模</h2>
+              <div className={`text-[10px] uppercase tracking-[0.6em] font-bold mb-2 font-lhkk ${styles.goldAccent}`}>賀年糕點</div>
+              <h2 className={`text-4xl md:text-5xl font-black italic uppercase tracking-tighter font-lhkk transition-colors duration-500 ${styles.textMain}`}>新春糕點禮券</h2>
             </div>
             <div className={`text-[10px] tracking-widest font-bold uppercase px-4 py-2 border transition-colors duration-500 ${isDark ? 'text-zinc-600 bg-zinc-900/50 border-zinc-800' : 'text-black bg-white border-black'}`}>
-              22.31° N / 114.17° E
+              美心出品 · 香港製造
             </div>
           </FadeIn>
           <FadeIn delay={300}>
-            <ProductGrid onAcquire={handleAcquire} theme={theme} />
+            <ProductGrid onAcquire={handleAcquire} theme={theme} onProductClick={handleMaximProductClick} />
           </FadeIn>
         </section>
 
-        <section className={`py-60 px-8 flex flex-col items-center text-center relative overflow-hidden transition-colors duration-500 ${isDark ? 'bg-black' : 'bg-[#e8e6dc]'}`}>
-          <FadeIn className="relative z-10 max-w-3xl">
-            <h3 className={`text-3xl md:text-5xl font-['Noto_Serif_TC'] italic mb-16 leading-tight transition-colors duration-500 ${isDark ? 'text-zinc-200' : 'text-black'}`}>"以前我以為有一種墨一開始印就會滲到紙背，原來它什麼痕跡都沒有留下，那行字一開始就已經乾了。"</h3>
-            <p className={`mb-12 font-['Noto_Serif_TC'] tracking-widest text-sm uppercase transition-colors duration-500 ${styles.textSub}`}>輸入你的地址，我們會把那塊鉛字寄給你。</p>
-            <div className={`flex flex-col md:flex-row gap-0 w-full border transition-all duration-700 ${styles.border} ${styles.inputBorder}`}>
-              <input 
-                type="email" 
-                placeholder="LONELY.SOUL@KOWLOON.COM" 
-                className={`flex-grow bg-transparent px-10 py-6 outline-none font-serif text-lg transition-colors duration-500 ${styles.textMain} placeholder:opacity-30`}
-              />
-              <button className={`px-16 py-6 font-black uppercase tracking-[0.4em] text-xs transition-all duration-500 font-['Noto_Serif_TC'] ${isDark ? 'bg-red-900 text-black hover:bg-white' : 'bg-black text-white hover:bg-red-700'}`}>
-                郵寄鉛華
-              </button>
-            </div>
-          </FadeIn>
-        </section>
+        {/* 以前我以為 Section - Conditionally Hidden */}
+        {SHOW_TEXT_SECTIONS && (
+          <section className={`py-60 px-8 flex flex-col items-center text-center relative overflow-hidden transition-colors duration-500 ${isDark ? 'bg-black' : 'bg-[#e8e6dc]'}`}>
+            <FadeIn className="relative z-10 max-w-3xl">
+              <h3 className={`text-3xl md:text-5xl font-lhkk italic mb-16 leading-tight transition-colors duration-500 ${isDark ? 'text-zinc-200' : 'text-black'}`}>"以前我以為有一種墨一開始印就會滲到紙背，原來它什麼痕跡都沒有留下，那行字一開始就已經乾了。"</h3>
+              <p className={`mb-12 font-lhkk tracking-widest text-sm uppercase transition-colors duration-500 ${styles.textSub}`}>輸入你的地址，我們會把那塊鉛字寄給你。</p>
+              <div className={`flex flex-col md:flex-row gap-0 w-full border transition-all duration-700 ${styles.border} ${styles.inputBorder}`}>
+                <input
+                  type="email"
+                  placeholder="LONELY.SOUL@KOWLOON.COM"
+                  className={`flex-grow bg-transparent px-10 py-6 outline-none font-serif text-lg transition-colors duration-500 ${styles.textMain} placeholder:opacity-30`}
+                />
+                <button className={`px-16 py-6 font-black uppercase tracking-[0.4em] text-xs transition-all duration-500 font-lhkk ${isDark ? 'bg-red-900 text-black hover:bg-white' : 'bg-black text-white hover:bg-red-700'}`}>
+                  郵寄鉛華
+                </button>
+              </div>
+            </FadeIn>
+          </section>
+        )}
       </main>
 
       <footer className={`py-32 px-10 border-t relative z-20 transition-colors duration-500 ${styles.border} ${isDark ? 'bg-zinc-950' : 'bg-[#f4f4f0]'}`}>
-        <div className={`max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10 text-[9px] tracking-[0.4em] font-black uppercase font-['Noto_Serif_TC'] ${styles.textSub}`}>
+        <div className={`max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10 text-[9px] tracking-[0.4em] font-black uppercase font-lhkk ${styles.textSub}`}>
           <div className="flex items-center gap-8">
             <span>© 1960-2046</span>
             <span className={`w-8 h-[1px] ${isDark ? 'bg-zinc-800' : 'bg-black'}`}></span>

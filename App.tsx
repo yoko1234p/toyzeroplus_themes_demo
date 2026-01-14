@@ -171,6 +171,7 @@ const App: React.FC = () => {
   };
 
   const styles = getStyles();
+  const isCompany = theme === 'company';
 
   if (view === 'checkout') {
     return <CheckoutPage product={selectedProduct} onBack={handleBack} theme={theme} />;
@@ -189,6 +190,128 @@ const App: React.FC = () => {
       </div>
     );
   };
+
+  // Company Mode - Traditional Hong Kong signboard style with Seal mode sections
+  if (isCompany) {
+    return (
+      <div className="min-h-screen flex flex-col overflow-x-hidden transition-colors duration-700 bg-[#F9F9F9] selection:bg-[#C83F49] selection:text-white">
+        <ThemeToggle theme={theme} onToggle={handleThemeChange} />
+
+        {/* Company Mode Hero Section */}
+        <header className="relative min-h-screen flex flex-col justify-center items-center px-4 overflow-hidden">
+
+          {/* Subtle Grid Background */}
+          <div className="absolute inset-0 z-0 pointer-events-none opacity-10">
+            <div className="w-full h-full" style={{
+              backgroundImage: `
+                linear-gradient(to right, #C83F49 1px, transparent 1px),
+                linear-gradient(to bottom, #C83F49 1px, transparent 1px)
+              `,
+              backgroundSize: '60px 60px'
+            }} />
+          </div>
+
+          {/* Main Signboard Container */}
+          <div className="relative z-10 flex flex-col items-center justify-center px-4 py-8 w-11/12 md:w-2/3 max-w-[1000px]">
+
+            {/* Decorative top border */}
+            <div className="flex items-center gap-4 mb-8">
+              <div className="w-16 h-px bg-[#C83F49]/40" />
+              <div className="w-3 h-3 border-2 border-[#C83F49] rotate-45" />
+              <div className="w-16 h-px bg-[#C83F49]/40" />
+            </div>
+
+            {/* Traditional 4-column Grid Layout: 快(印刷上) 樂(公司上) */}
+            <div className="grid grid-cols-4 gap-x-2 sm:gap-x-4 md:gap-x-6 lg:gap-x-8 gap-y-0 w-full relative">
+              {/* Row 1: 快 (span 2 cols above 印刷), 樂 (span 2 cols above 公司) */}
+              <span className="col-span-2 font-lhkk font-black text-[#C83F49] text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] xl:text-[12rem] leading-none text-center">
+                快
+              </span>
+              <span className="col-span-2 font-lhkk font-black text-[#C83F49] text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] xl:text-[12rem] leading-none text-center">
+                樂
+              </span>
+
+              {/* Row 2: 印 刷 公 司 */}
+              <span className="font-lhkk font-black text-[#C83F49] text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-none text-center">
+                印
+              </span>
+              <span className="font-lhkk font-black text-[#C83F49] text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-none text-center">
+                刷
+              </span>
+              <span className="font-lhkk font-black text-[#C83F49] text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-none text-center">
+                公
+              </span>
+              <span className="relative font-lhkk font-black text-[#C83F49] text-5xl md:text-6xl lg:text-7xl xl:text-8xl leading-none text-center">
+                司
+                {/* Address - 司字右下方 */}
+                <span className="absolute -bottom-8 -right-4 sm:-right-6 font-lhkk text-[8px] sm:text-[10px] text-[#C83F49] leading-relaxed">
+                  大角咀<br />
+                  博文街17號
+                </span>
+              </span>
+            </div>
+
+            {/* English Name */}
+            <p className="mt-8 text-sm sm:text-base md:text-lg lg:text-xl tracking-[0.3em] sm:tracking-[0.4em] text-[#333]/70 font-serif">
+              Happy Printing Company
+            </p>
+            {/* Decorative bottom border */}
+            <div className="flex items-center gap-4 mt-8">
+              <div className="w-16 h-px bg-[#C83F49]/40" />
+              <div className="w-3 h-3 border-2 border-[#C83F49] rotate-45" />
+              <div className="w-16 h-px bg-[#C83F49]/40" />
+            </div>
+          </div>
+
+          {/* Corner Decorations */}
+          <div className="absolute top-8 left-8 w-12 h-12 border-l-2 border-t-2 border-[#C83F49]/30" />
+          <div className="absolute top-8 right-8 w-12 h-12 border-r-2 border-t-2 border-[#C83F49]/30" />
+          <div className="absolute bottom-8 left-8 w-12 h-12 border-l-2 border-b-2 border-[#C83F49]/30" />
+          <div className="absolute bottom-8 right-8 w-12 h-12 border-r-2 border-b-2 border-[#C83F49]/30" />
+
+          {/* Scroll indicator */}
+          <div
+            className={`absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 transition-all duration-1000 ${
+              lightModeStage >= 2 ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <span
+              className="text-[10px] tracking-[0.4em] text-[#333333]/40 font-serif"
+              style={{ fontFamily: "'Noto Serif TC', serif" }}
+            >
+              往下滑動
+            </span>
+            <div className="w-px h-10 bg-gradient-to-b from-[#B08D57]/40 to-transparent" />
+          </div>
+        </header>
+
+        {/* Marquee Banner */}
+        <Marquee theme={theme} />
+
+        {/* Seal Mode Content Sections (Products only) */}
+        <SealModeSections
+          onProductClick={handleMaximProductClick}
+          showTextSections={SHOW_TEXT_SECTIONS}
+        />
+
+        {/* Footer - Card Mode Style */}
+        <footer className="py-32 px-10 border-t relative z-20 transition-colors duration-500 border-black bg-[#f4f4f0]">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10 text-[9px] tracking-[0.4em] font-black uppercase font-lhkk text-zinc-600">
+            <div className="flex items-center gap-8">
+              <span>© 1960-2046</span>
+              <span className="w-8 h-[1px] bg-black"></span>
+              <span>快樂活版印刷公司</span>
+            </div>
+            <div className="text-red-700 tracking-[0.8em]">專為傷心人排版</div>
+          </div>
+        </footer>
+
+        <style>{`
+          .writing-vertical-rl { writing-mode: vertical-rl; }
+        `}</style>
+      </div>
+    );
+  }
 
   // Seal Mode - Completely different layout
   if (isSeal) {

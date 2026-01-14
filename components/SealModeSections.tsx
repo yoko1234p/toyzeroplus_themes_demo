@@ -57,38 +57,6 @@ const SealModeSections: React.FC<SealModeSectionsProps> = ({ onProductClick, sho
 
   return (
     <div className="bg-transparent relative z-10 w-full max-w-7xl mx-auto px-4 md:px-12 py-24 space-y-24 md:space-y-32">
-      
-      {/* Introduction Block - Modified for CNY */}
-      <section className="grid grid-cols-1 md:grid-cols-12 gap-0 border-t border-b border-[#B08D57]/30">
-        {/* Red Title Block */}
-        <div className="md:col-span-3 p-6 md:p-8 border-b md:border-b-0 md:border-r border-[#B08D57]/30 flex items-center justify-center bg-[#C83F49]/5 relative overflow-hidden">
-             {/* Decorative Pattern */}
-             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#C83F49_1px,transparent_1px)] [background-size:16px_16px]"></div>
-             
-             <div className="relative z-10 border-2 border-[#C83F49] p-3 md:p-4">
-                <h2 className="text-3xl md:text-5xl font-lhkk font-black tracking-widest writing-vertical-rl text-[#C83F49]">
-                    歲月滋味
-                </h2>
-             </div>
-        </div>
-        
-        {/* Text Block */}
-        <div className="md:col-span-9 p-8 md:p-12 flex flex-col justify-center bg-white/90 backdrop-blur-sm">
-             <div className="flex items-center gap-4 mb-6">
-                <span className="text-[#B08D57] font-mono text-xs tracking-[0.3em] uppercase border border-[#B08D57] px-2 py-1">Lunar New Year Collection</span>
-                <div className="h-px flex-grow bg-[#B08D57]/20"></div>
-             </div>
-             <p className="font-lhkk text-lg leading-loose text-[#333]/80 mb-8 max-w-xl">
-                味覺是記憶的鑰匙。新春將至，我們以傳統活版印刷的精神，打磨每一份糕點。
-                <br/>
-                不只是食物，更是對來年最厚重的祝福。
-             </p>
-             <div className="flex gap-2">
-                 <div className="w-2 h-2 bg-[#C83F49]"></div>
-                 <div className="w-2 h-2 bg-[#B08D57]"></div>
-             </div>
-        </div>
-      </section>
 
       {/* CNY Product Grid - "Voucher Style" */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -140,16 +108,37 @@ const SealModeSections: React.FC<SealModeSectionsProps> = ({ onProductClick, sho
         ))}
       </section>
 
+      {/* Introduction Block - Modified for CNY (moved after products) */}
+      <section className="grid grid-cols-1 md:grid-cols-12 gap-0 border-t border-b border-[#B08D57]/30">
+        {/* Red Title Block */}
+        <div className="md:col-span-3 p-6 md:p-8 border-b md:border-b-0 md:border-r border-[#B08D57]/30 flex items-center justify-center bg-[#C83F49]/5 relative overflow-hidden">
+             {/* Decorative Pattern */}
+             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#C83F49_1px,transparent_1px)] [background-size:16px_16px]"></div>
 
-      {/* Footer / End Seal */}
-      <footer className="flex flex-col items-center justify-center py-20 border-t border-[#333]/20">
-          <div className="w-24 h-24 border border-[#C83F49] rounded-full flex items-center justify-center p-1 mb-6">
-              <div className="w-full h-full border border-[#C83F49] rounded-full flex items-center justify-center border-dashed">
-                 <span className="text-[#C83F49] font-lhkk font-black text-3xl">完</span>
-              </div>
-          </div>
-          <p className="text-[10px] tracking-[0.5em] text-[#333]/40 uppercase font-mono">End of Paper</p>
-      </footer>
+             <div className="relative z-10 border-2 border-[#C83F49] p-2 md:p-4">
+                <h2 className="text-2xl md:text-5xl font-lhkk font-black tracking-wider md:tracking-widest writing-vertical-rl text-[#C83F49]">
+                    歲月滋味
+                </h2>
+             </div>
+        </div>
+
+        {/* Text Block */}
+        <div className="md:col-span-9 p-8 md:p-12 flex flex-col justify-center bg-white/90 backdrop-blur-sm">
+             <div className="flex items-center gap-4 mb-6">
+                <span className="text-[#B08D57] font-mono text-xs tracking-[0.3em] uppercase border border-[#B08D57] px-2 py-1">Lunar New Year Collection</span>
+                <div className="h-px flex-grow bg-[#B08D57]/20"></div>
+             </div>
+             <p className="font-lhkk text-lg leading-loose text-[#333]/80 mb-8 max-w-xl">
+                味覺是記憶的鑰匙。新春將至，我們以傳統活版印刷的精神，打磨每一份糕點。
+                <br/>
+                不只是食物，更是對來年最厚重的祝福。
+             </p>
+             <div className="flex gap-2">
+                 <div className="w-2 h-2 bg-[#C83F49]"></div>
+                 <div className="w-2 h-2 bg-[#B08D57]"></div>
+             </div>
+        </div>
+      </section>
 
       <style>{`
         .writing-vertical-rl { writing-mode: vertical-rl; }

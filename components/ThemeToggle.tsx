@@ -10,13 +10,14 @@ interface ThemeToggleProps {
 const ThemeToggle: React.FC<ThemeToggleProps> = ({ theme, onToggle }) => {
   const isDark = theme === 'dark';
   const isSeal = theme === 'seal';
+  const isCompany = theme === 'company';
 
   // Seal mode has its own minimal styling
   const getSelectStyles = () => {
     if (isDark) {
       return 'bg-black text-white border-zinc-800 hover:border-red-600';
     }
-    if (isSeal) {
+    if (isSeal || isCompany) {
       return 'bg-[#F9F9F9] text-[#333333] border-[#EAEAEA] hover:border-[#C83F49]';
     }
     return 'bg-[#f4f4f0] text-red-900 border-black hover:bg-black hover:text-white';
@@ -34,6 +35,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ theme, onToggle }) => {
           <option value="dark">黑夜模式 (Night)</option>
           <option value="card">設計預覽 (Card)</option>
           <option value="seal">印章模式 (Seal)</option>
+          <option value="company">公司招牌 (Company)</option>
         </select>
         
         {/* Custom Arrow Indicator */}

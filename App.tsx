@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import NeonLogo from './components/NeonLogo';
 import HappyPrintingLogo from './components/HappyPrintingLogo';
 import GreetingCardKV from './components/GreetingCardKV';
-import SealLoadingAnimation from './components/SealLoadingAnimation';
 import SealKV from './components/SealKV';
 import SealModeSections from './components/SealModeSections';
 import CalligraphySection from './components/CalligraphySection';
@@ -18,8 +17,8 @@ import { Product, ThemeMode } from './types';
 
 const App: React.FC = () => {
   const [view, setView] = useState<'intro' | 'leading' | 'checkout'>('intro');
-  // Default 'light' (Day/Paper mode)
-  const [theme, setTheme] = useState<ThemeMode>('light');
+  // Default 'card' (Greeting Card Preview mode)
+  const [theme, setTheme] = useState<ThemeMode>('card');
   
   // Animation State for Light/Card modes
   // 0: Init, 1: Draw Strokes/Card Enter, 2: Fill Text, 3: Show Hero Content, 4: Complete
@@ -31,12 +30,7 @@ const App: React.FC = () => {
 
   // Initial Boot Logic
   useEffect(() => {
-    // Seal mode has its own intro animation
-    if (theme === 'seal') {
-      setView('intro');
-      return;
-    }
-    // If starting in Light or Card Mode, bypass 'intro' view and start integrated animation
+    // If starting in Light, Card, or Seal Mode, bypass 'intro' view and start integrated animation
     if (theme !== 'dark') {
       setView('leading');
       setLightModeStage(1);
@@ -66,29 +60,22 @@ const App: React.FC = () => {
 
   // Theme Switch Handler
   const handleThemeChange = (newTheme: ThemeMode) => {
+    // Scroll to top on theme change
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
     setTheme(newTheme);
 
-    if (newTheme === 'seal') {
-      // Switching TO Seal Mode -> Trigger Seal Loading Animation
-      setView('intro');
-      setLightModeStage(0);
-    } else if (newTheme === 'dark') {
+    if (newTheme === 'dark') {
       // Switching TO Dark Mode -> Trigger Cinematic Intro
       setView('intro');
       setLightModeStage(0);
     } else {
-      // Switching TO Light or Card Mode -> Reset to leading view and restart animation sequence
+      // Switching TO Light, Card, or Seal Mode -> Reset to leading view and restart animation sequence
       setView('leading');
       setLightModeStage(0);
       // Small delay to allow reset to take effect before starting animation
       setTimeout(() => setLightModeStage(1), 50);
     }
-  };
-
-  // Seal mode complete handler
-  const handleSealIntroComplete = () => {
-    setView('leading');
-    setLightModeStage(1);
   };
 
   const fetchAiMood = async () => {
@@ -186,11 +173,6 @@ const App: React.FC = () => {
   if (isSeal) {
     return (
       <div className={`min-h-screen flex flex-col overflow-x-hidden transition-colors duration-700 bg-[#F9F9F9] selection:bg-[#C83F49] selection:text-white`}>
-        {/* Seal Mode Loading Animation */}
-        {view === 'intro' && (
-          <SealLoadingAnimation onComplete={handleSealIntroComplete} />
-        )}
-
         <ThemeToggle theme={theme} onToggle={handleThemeChange} />
 
         {/* Seal Mode Hero Section */}

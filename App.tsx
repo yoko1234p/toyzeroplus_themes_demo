@@ -193,37 +193,57 @@ const App: React.FC = () => {
 
         <ThemeToggle theme={theme} onToggle={handleThemeChange} />
 
-        <style>{`
-          @keyframes grain {
-            0%, 100% { transform: translate(0, 0); }
-            10% { transform: translate(-5%, -10%); }
-            20% { transform: translate(-15%, 5%); }
-            30% { transform: translate(7%, -25%); }
-            40% { transform: translate(-5%, 25%); }
-            50% { transform: translate(-15%, 10%); }
-            60% { transform: translate(15%, 0%); }
-            70% { transform: translate(0%, 15%); }
-            80% { transform: translate(3%, 35%); }
-            90% { transform: translate(-10%, 10%); }
-          }
-          .animate-grain {
-            animation: grain 8s steps(10) infinite;
-          }
-        `}</style>
-
         {/* Seal Mode Hero Section */}
         <header className="relative min-h-screen flex flex-col justify-center items-center px-4 overflow-hidden">
-          {/* Animated Rice Paper Texture */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div 
-              className="absolute -inset-[100%] w-[300%] h-[300%] opacity-40 animate-grain"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-                backgroundSize: '200px 200px'
-              }}
-            />
-            {/* Vignette */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(200,63,73,0.03)_100%)]" />
+          
+          {/* Dynamic Grid Background */}
+          <div className="absolute inset-0 z-0 pointer-events-none">
+            <svg className="w-full h-full opacity-20" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="grid-fade" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#333" stopOpacity="0.1" />
+                  <stop offset="50%" stopColor="#333" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="#333" stopOpacity="0.1" />
+                </linearGradient>
+              </defs>
+              {/* Horizontal Lines */}
+              {[15, 35, 50, 65, 85].map((pos, i) => (
+                 <line 
+                   key={`h-${i}`}
+                   x1="0%" 
+                   y1={`${pos}%`} 
+                   x2="100%" 
+                   y2={`${pos}%`} 
+                   stroke="url(#grid-fade)" 
+                   strokeWidth="1"
+                   strokeDasharray="1000"
+                   strokeDashoffset="1000"
+                   className="animate-[draw-line_3s_ease-out_forwards]"
+                   style={{ animationDelay: `${i * 0.2}s` }}
+                 />
+              ))}
+              {/* Vertical Lines */}
+              {[10, 25, 45, 60, 80, 90].map((pos, i) => (
+                 <line 
+                   key={`v-${i}`}
+                   x1={`${pos}%`} 
+                   y1="0%" 
+                   x2={`${pos}%`} 
+                   y2="100%" 
+                   stroke="url(#grid-fade)" 
+                   strokeWidth="1" 
+                   strokeDasharray="1000"
+                   strokeDashoffset="1000"
+                   className="animate-[draw-line_3s_ease-out_forwards]"
+                   style={{ animationDelay: `${i * 0.3 + 1}s` }}
+                 />
+              ))}
+            </svg>
+            <style>{`
+              @keyframes draw-line {
+                to { stroke-dashoffset: 0; }
+              }
+            `}</style>
           </div>
 
           {/* Main KV */}

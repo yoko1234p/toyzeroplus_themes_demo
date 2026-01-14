@@ -3,6 +3,9 @@ import React, { useState, useEffect } from 'react';
 import NeonLogo from './components/NeonLogo';
 import HappyPrintingLogo from './components/HappyPrintingLogo';
 import GreetingCardKV from './components/GreetingCardKV';
+import SealLoadingAnimation from './components/SealLoadingAnimation';
+import SealKV from './components/SealKV';
+import SealModeSections from './components/SealModeSections';
 import CalligraphySection from './components/CalligraphySection';
 import ProductGrid from './components/ProductGrid';
 import Marquee from './components/Marquee';
@@ -28,6 +31,11 @@ const App: React.FC = () => {
 
   // Initial Boot Logic
   useEffect(() => {
+    // Seal mode has its own intro animation
+    if (theme === 'seal') {
+      setView('intro');
+      return;
+    }
     // If starting in Light or Card Mode, bypass 'intro' view and start integrated animation
     if (theme !== 'dark') {
       setView('leading');
@@ -59,8 +67,12 @@ const App: React.FC = () => {
   // Theme Switch Handler
   const handleThemeChange = (newTheme: ThemeMode) => {
     setTheme(newTheme);
-    
-    if (newTheme === 'dark') {
+
+    if (newTheme === 'seal') {
+      // Switching TO Seal Mode -> Trigger Seal Loading Animation
+      setView('intro');
+      setLightModeStage(0);
+    } else if (newTheme === 'dark') {
       // Switching TO Dark Mode -> Trigger Cinematic Intro
       setView('intro');
       setLightModeStage(0);
@@ -71,6 +83,12 @@ const App: React.FC = () => {
       // Small delay to allow reset to take effect before starting animation
       setTimeout(() => setLightModeStage(1), 50);
     }
+  };
+
+  // Seal mode complete handler
+  const handleSealIntroComplete = () => {
+    setView('leading');
+    setLightModeStage(1);
   };
 
   const fetchAiMood = async () => {
@@ -105,17 +123,50 @@ const App: React.FC = () => {
 
   // Define Theme Colors
   const isDark = theme === 'dark';
-  const styles = {
-    bg: isDark ? 'bg-[#050505]' : 'bg-[#f4f4f0]', // Dark vs Paper White
-    textMain: isDark ? 'text-zinc-200' : 'text-black',
-    textSub: isDark ? 'text-zinc-400' : 'text-zinc-600',
-    border: isDark ? 'border-zinc-900' : 'border-black',
-    accent: isDark ? 'text-red-800' : 'text-red-700',
-    goldAccent: isDark ? 'text-red-900' : 'text-yellow-700',
-    buttonBg: isDark ? 'bg-red-800 hover:bg-white' : 'bg-red-700 hover:bg-black',
-    selection: isDark ? 'selection:bg-red-600 selection:text-white' : 'selection:bg-black selection:text-white',
-    inputBorder: isDark ? 'focus-within:border-red-900' : 'focus-within:border-yellow-600',
+  const isSeal = theme === 'seal';
+
+  const getStyles = () => {
+    if (isDark) {
+      return {
+        bg: 'bg-[#050505]',
+        textMain: 'text-zinc-200',
+        textSub: 'text-zinc-400',
+        border: 'border-zinc-900',
+        accent: 'text-red-800',
+        goldAccent: 'text-red-900',
+        buttonBg: 'bg-red-800 hover:bg-white',
+        selection: 'selection:bg-red-600 selection:text-white',
+        inputBorder: 'focus-within:border-red-900',
+      };
+    }
+    if (isSeal) {
+      return {
+        bg: 'bg-[#F9F9F9]',
+        textMain: 'text-[#333333]',
+        textSub: 'text-[#333333]/60',
+        border: 'border-[#EAEAEA]',
+        accent: 'text-[#C83F49]',
+        goldAccent: 'text-[#B08D57]',
+        buttonBg: 'bg-[#C83F49] hover:bg-[#B08D57]',
+        selection: 'selection:bg-[#C83F49] selection:text-white',
+        inputBorder: 'focus-within:border-[#C83F49]',
+      };
+    }
+    // Default (light/card)
+    return {
+      bg: 'bg-[#f4f4f0]',
+      textMain: 'text-black',
+      textSub: 'text-zinc-600',
+      border: 'border-black',
+      accent: 'text-red-700',
+      goldAccent: 'text-yellow-700',
+      buttonBg: 'bg-red-700 hover:bg-black',
+      selection: 'selection:bg-black selection:text-white',
+      inputBorder: 'focus-within:border-yellow-600',
+    };
   };
+
+  const styles = getStyles();
 
   if (view === 'checkout') {
     return <CheckoutPage product={selectedProduct} onBack={handleBack} theme={theme} />;
@@ -131,14 +182,85 @@ const App: React.FC = () => {
     );
   };
 
+  // Seal Mode - Completely different layout
+  if (isSeal) {
+    return (
+      <div className={`min-h-screen flex flex-col overflow-x-hidden transition-colors duration-700 bg-[#F9F9F9] selection:bg-[#C83F49] selection:text-white`}>
+        {/* Seal Mode Loading Animation */}
+        {view === 'intro' && (
+          <SealLoadingAnimation onComplete={handleSealIntroComplete} />
+        )}
+
+        <ThemeToggle theme={theme} onToggle={handleThemeChange} />
+
+        <style>{`
+          @keyframes grain {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-5%, -10%); }
+            20% { transform: translate(-15%, 5%); }
+            30% { transform: translate(7%, -25%); }
+            40% { transform: translate(-5%, 25%); }
+            50% { transform: translate(-15%, 10%); }
+            60% { transform: translate(15%, 0%); }
+            70% { transform: translate(0%, 15%); }
+            80% { transform: translate(3%, 35%); }
+            90% { transform: translate(-10%, 10%); }
+          }
+          .animate-grain {
+            animation: grain 8s steps(10) infinite;
+          }
+        `}</style>
+
+        {/* Seal Mode Hero Section */}
+        <header className="relative min-h-screen flex flex-col justify-center items-center px-4 overflow-hidden">
+          {/* Animated Rice Paper Texture */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div 
+              className="absolute -inset-[100%] w-[300%] h-[300%] opacity-40 animate-grain"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+                backgroundSize: '200px 200px'
+              }}
+            />
+            {/* Vignette */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(200,63,73,0.03)_100%)]" />
+          </div>
+
+          {/* Main KV */}
+          <div className="relative z-10">
+            <SealKV stage={lightModeStage} />
+          </div>
+
+          {/* Scroll indicator */}
+          <div
+            className={`absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 transition-all duration-1000 ${
+              lightModeStage >= 2 ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <span
+              className="text-[10px] tracking-[0.4em] text-[#333333]/40 font-serif"
+              style={{ fontFamily: "'Noto Serif TC', serif" }}
+            >
+              往下滑動
+            </span>
+            <div className="w-px h-10 bg-gradient-to-b from-[#B08D57]/40 to-transparent" />
+          </div>
+        </header>
+
+        {/* Seal Mode Content Sections */}
+        <SealModeSections />
+      </div>
+    );
+  }
+
   return (
     <div className={`min-h-screen flex flex-col overflow-x-hidden transition-colors duration-700 ${styles.bg} ${styles.selection} ${view === 'intro' ? 'h-screen overflow-hidden' : ''}`}>
-      
+
       {/* Dark Mode Overlay Intro */}
       {view === 'intro' && isDark && (
         <OpeningAnimation onComplete={() => setView('leading')} theme={theme} />
       )}
-      
+
       <ThemeToggle theme={theme} onToggle={handleThemeChange} />
 
       {/* Corner Branding Persistence */}

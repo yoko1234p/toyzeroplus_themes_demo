@@ -9,22 +9,31 @@ interface ThemeToggleProps {
 
 const ThemeToggle: React.FC<ThemeToggleProps> = ({ theme, onToggle }) => {
   const isDark = theme === 'dark';
-  
+  const isSeal = theme === 'seal';
+
+  // Seal mode has its own minimal styling
+  const getSelectStyles = () => {
+    if (isDark) {
+      return 'bg-black text-white border-zinc-800 hover:border-red-600';
+    }
+    if (isSeal) {
+      return 'bg-[#F9F9F9] text-[#333333] border-[#EAEAEA] hover:border-[#C83F49]';
+    }
+    return 'bg-[#f4f4f0] text-red-900 border-black hover:bg-black hover:text-white';
+  };
+
   return (
     <div className="fixed top-6 right-6 z-[120]">
       <div className="relative group">
-        <select 
+        <select
           value={theme}
           onChange={(e) => onToggle(e.target.value as ThemeMode)}
-          className={`appearance-none pl-8 pr-12 py-3 outline-none border font-['Noto_Serif_TC'] font-bold text-xs tracking-widest uppercase cursor-pointer transition-all duration-500
-            ${isDark 
-              ? 'bg-black text-white border-zinc-800 hover:border-red-600' 
-              : 'bg-[#f4f4f0] text-red-900 border-black hover:bg-black hover:text-white'
-            }`}
+          className={`appearance-none pl-8 pr-12 py-3 outline-none border font-['Noto_Serif_TC'] font-bold text-xs tracking-widest uppercase cursor-pointer transition-all duration-500 ${getSelectStyles()}`}
         >
           <option value="light">白晝模式 (Day)</option>
           <option value="dark">黑夜模式 (Night)</option>
           <option value="card">設計預覽 (Card)</option>
+          <option value="seal">印章模式 (Seal)</option>
         </select>
         
         {/* Custom Arrow Indicator */}

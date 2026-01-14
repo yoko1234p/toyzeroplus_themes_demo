@@ -52,7 +52,7 @@ const GridBox: React.FC<{ children: React.ReactNode; className?: string; delay?:
 };
 
 const SealModeSections: React.FC<SealModeSectionsProps> = ({ onProductClick, showTextSections = false }) => {
-  // 使用美心產品數據
+  // 使用快樂印刷產品數據
   const products = PRODUCTS;
 
   return (
@@ -61,7 +61,7 @@ const SealModeSections: React.FC<SealModeSectionsProps> = ({ onProductClick, sho
       {/* Introduction Block - Modified for CNY */}
       <section className="grid grid-cols-1 md:grid-cols-12 gap-0 border-t border-b border-[#B08D57]/30">
         {/* Red Title Block */}
-        <div className="md:col-span-3 p-8 border-r border-[#B08D57]/30 flex items-center justify-center bg-[#C83F49]/5 relative overflow-hidden">
+        <div className="md:col-span-3 p-6 md:p-8 border-b md:border-b-0 md:border-r border-[#B08D57]/30 flex items-center justify-center bg-[#C83F49]/5 relative overflow-hidden">
              {/* Decorative Pattern */}
              <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#C83F49_1px,transparent_1px)] [background-size:16px_16px]"></div>
              
@@ -117,12 +117,12 @@ const SealModeSections: React.FC<SealModeSectionsProps> = ({ onProductClick, sho
 
                         {/* Content */}
                         <div className="text-center mt-auto">
-                            <h3 className="text-2xl font-lhkk font-black text-[#333] mb-1">{p.name}</h3>
-                            <p className="text-[10px] text-[#B08D57] tracking-[0.2em] uppercase mb-4 font-mono">{p.nameEn}</p>
+                            <h3 className="text-2xl font-lhkk font-black text-[#333] mb-1 h-8 flex items-center justify-center">{p.name}</h3>
+                            <p className="text-[10px] text-[#B08D57] tracking-[0.2em] uppercase mb-4 font-mono h-8 flex items-center justify-center">{p.nameEn}</p>
 
                             <div className="w-8 h-px bg-[#333]/20 mx-auto mb-4"></div>
 
-                            <p className="text-sm text-[#333]/80 leading-relaxed font-serif mb-6 line-clamp-3">
+                            <p className="text-sm text-[#333]/80 leading-relaxed font-serif mb-6 line-clamp-2 h-12">
                                 {renderHighlightedText(p.description, p.highlightText)}
                             </p>
                         </div>

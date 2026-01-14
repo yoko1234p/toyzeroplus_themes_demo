@@ -184,7 +184,7 @@ const App: React.FC = () => {
     // Fade in during Stage 3 for non-dark modes
     const opacity = !isDark && lightModeStage < 3 ? 'opacity-0' : 'opacity-100';
     return (
-      <div className={`fixed z-[100] font-lhkk text-3xl md:text-5xl font-black select-none pointer-events-none transition-all duration-1000 ${opacity} ${position} ${isDark ? 'text-red-900/60' : 'text-red-700/80'}`}>
+      <div className={`fixed z-[100] font-lhkk text-5xl md:text-6xl font-black select-none pointer-events-none transition-all duration-1000 ${opacity} ${position} ${isDark ? 'text-red-900/60' : 'text-red-700/80'}`}>
         {char}
       </div>
     );
@@ -296,7 +296,7 @@ const App: React.FC = () => {
       <CornerLabel char="刷" position="bottom-6 right-6" />
 
       {/* Hero Section */}
-      <header className={`relative h-screen flex flex-col justify-center items-center px-4 overflow-hidden border-b transition-colors duration-500 ${styles.border}`}>
+      <header className={`relative min-h-screen flex flex-col justify-center items-center px-4 py-24 border-b transition-colors duration-500 ${styles.border}`}>
         {/* Background Image / Texture */}
         <div className={`absolute inset-0 z-0 transition-opacity duration-[2000ms] ${(!isDark && lightModeStage < 3) ? 'opacity-0' : 'opacity-100'}`}>
           <img 
@@ -405,7 +405,7 @@ const App: React.FC = () => {
               <h2 className={`text-4xl md:text-5xl font-black italic uppercase tracking-tighter font-lhkk transition-colors duration-500 ${styles.textMain}`}>新春糕點禮券</h2>
             </div>
             <div className={`text-[10px] tracking-widest font-bold uppercase px-4 py-2 border transition-colors duration-500 ${isDark ? 'text-zinc-600 bg-zinc-900/50 border-zinc-800' : 'text-black bg-white border-black'}`}>
-              美心出品 · 香港製造
+              快樂印刷出品 · 香港製造
             </div>
           </FadeIn>
           <FadeIn delay={300}>

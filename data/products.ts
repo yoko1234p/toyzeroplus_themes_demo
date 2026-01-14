@@ -1,6 +1,6 @@
 /**
  * Product Data from Maxim's Products
- * 美心賀年糕點產品資料
+ * 快樂印刷賀年糕點產品資料
  */
 
 export interface MaximProduct {
@@ -55,8 +55,8 @@ export const PICKUP_METHODS: Record<string, PickupMethod> = {
 export const PRODUCTS: MaximProduct[] = [
   {
     id: 'mx-turnip-pudding-with-conpoy',
-    name: '美心瑤柱蘿蔔糕',
-    nameEn: 'MX Turnip Pudding with Conpoy',
+    name: '快樂印刷瑤柱蘿蔔糕',
+    nameEn: 'Happy Printing Turnip Pudding with Conpoy',
     price: 148,
     originalPrice: 198,
     currency: 'HKD',
@@ -64,16 +64,16 @@ export const PRODUCTS: MaximProduct[] = [
     highlightText: '8mm絲絲蘿蔔條',
     detailedDescription: '嚴選清甜白蘿蔔，切成8mm絲絲蘿蔔條，加上惹味兼口感極佳的北海道瑤柱，臘味及蝦米，入口鮮味豐足。',
     detailedHighlightText: '北海道瑤柱',
-    image: 'https://www.maximsproducts.com.hk/upload/product/779a50d7-948b-4e3b-ab1e-ee962b0ded74.png',
+    image: '/779a50d7-948b-4e3b-ab1e-ee962b0ded74.png',
     images: [
-      'https://www.maximsproducts.com.hk/upload/product/779a50d7-948b-4e3b-ab1e-ee962b0ded74.png',
-      'https://www.maximsproducts.com.hk/upload/product/09805662-55d2-4c02-81af-1cf924cb8802.png'
+      '/779a50d7-948b-4e3b-ab1e-ee962b0ded74.png',
+      '/09805662-55d2-4c02-81af-1cf924cb8802.png'
     ],
     weight: '每個約800克',
     dimensions: '315 x 180 x 60mm',
     pickupMethods: [PICKUP_METHODS.store],
     redemptionPeriod: '2026年2月5日至2月14日',
-    redemptionLocations: ['全線美心西餅', '指定分店'],
+    redemptionLocations: ['全線快樂印刷西餅', '指定分店'],
     features: [
       '8mm厚切絲蘿蔔條',
       '北海道瑤柱',
@@ -86,8 +86,8 @@ export const PRODUCTS: MaximProduct[] = [
   },
   {
     id: 'mx-turnip-pudding-with-mushroom-taro',
-    name: '美心香菇芋粒蘿蔔糕',
-    nameEn: 'MX Turnip Pudding with Mushroom & Taro',
+    name: '快樂印刷香菇芋粒蘿蔔糕',
+    nameEn: 'Happy Printing Turnip Pudding with Mushroom & Taro',
     price: 102,
     originalPrice: 133,
     currency: 'HKD',
@@ -95,15 +95,15 @@ export const PRODUCTS: MaximProduct[] = [
     highlightText: '蔬食配方',
     detailedDescription: '清甜8mm絲絲蘿蔔條，加入炒至甘香的椴木香菇、炸杏鮑菇、芋粒、甘筍等食材。產品採用蔬食配方，由菇類與蔬菜秘製而成。',
     detailedHighlightText: '椴木香菇',
-    image: 'https://www.maximsproducts.com.hk/upload/product/4dcf5afc-efcd-4709-a84c-a218b74670e6_400x320.png',
+    image: '/4dcf5afc-efcd-4709-a84c-a218b74670e6_400x320.png',
     images: [
-      'https://www.maximsproducts.com.hk/upload/product/4dcf5afc-efcd-4709-a84c-a218b74670e6_400x320.png',
-      'https://www.maximsproducts.com.hk/upload/product/92a37fd9-6e29-4519-b95f-4c4339f45926_400x320.png'
+      '/4dcf5afc-efcd-4709-a84c-a218b74670e6_400x320.png',
+      '/92a37fd9-6e29-4519-b95f-4c4339f45926_400x320.png'
     ],
     weight: '每個約570克',
     pickupMethods: [PICKUP_METHODS.store],
     redemptionPeriod: '2026年2月8日至2月14日',
-    redemptionLocations: ['全線美心西餅', '指定分店'],
+    redemptionLocations: ['全線快樂印刷西餅', '指定分店'],
     features: [
       '8mm絲絲蘿蔔條',
       '椴木香菇',
@@ -118,8 +118,8 @@ export const PRODUCTS: MaximProduct[] = [
   },
   {
     id: 'mx-taro-pudding',
-    name: '美心芋頭糕',
-    nameEn: 'MX Taro Pudding',
+    name: '快樂印刷芋頭糕',
+    nameEn: 'Happy Printing Taro Pudding',
     price: 148,
     originalPrice: 198,
     currency: 'HKD',
@@ -127,17 +127,17 @@ export const PRODUCTS: MaximProduct[] = [
     highlightText: '厚切成粒',
     detailedDescription: '特選香甜新鮮芋頭，厚切成粒，搭配份量十足的惹味甘香臘腸，芋頭綿香四溢，啖啖足料豐味。',
     detailedHighlightText: '惹味甘香臘腸',
-    image: 'https://www.maximsproducts.com.hk/upload/product/01a5a5c8-7764-4fd7-8c79-daa1b910207c.png',
+    image: '/01a5a5c8-7764-4fd7-8c79-daa1b910207c.png',
     images: [
-      'https://www.maximsproducts.com.hk/upload/product/01a5a5c8-7764-4fd7-8c79-daa1b910207c.png',
-      'https://www.maximsproducts.com.hk/upload/product/f2aec032-41e5-47b3-a872-5a1e6353c28a.png'
+      '/01a5a5c8-7764-4fd7-8c79-daa1b910207c.png',
+      '/f2aec032-41e5-47b3-a872-5a1e6353c28a.png'
     ],
     weight: '每個約810克',
     dimensions: '315 x 180 x 60mm',
     pickupMethods: [PICKUP_METHODS.store],
     redemptionPeriod: '2026年2月5日至2月14日',
     redemptionLocations: [
-      '2月5-11日：全線美心西餅及指定分店',
+      '2月5-11日：全線快樂印刷西餅及指定分店',
       '2月12-14日：指定分店'
     ],
     features: [

@@ -65,8 +65,8 @@ const SealModeSections: React.FC<SealModeSectionsProps> = ({ onProductClick, sho
              {/* Decorative Pattern */}
              <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#C83F49_1px,transparent_1px)] [background-size:16px_16px]"></div>
              
-             <div className="relative z-10 border-2 border-[#C83F49] p-4">
-                <h2 className="text-4xl md:text-5xl font-lhkk font-black tracking-widest writing-vertical-rl text-[#C83F49]">
+             <div className="relative z-10 border-2 border-[#C83F49] p-3 md:p-4">
+                <h2 className="text-3xl md:text-5xl font-lhkk font-black tracking-widest writing-vertical-rl text-[#C83F49]">
                     歲月滋味
                 </h2>
              </div>

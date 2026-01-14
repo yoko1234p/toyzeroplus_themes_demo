@@ -3,7 +3,7 @@
  * 產品詳情頁面
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MaximProduct, PRODUCTS } from '../data/products';
 import { ThemeMode } from '../types';
 
@@ -26,6 +26,13 @@ const ProductPage: React.FC<ProductPageProps> = ({
   const relatedProducts = PRODUCTS.filter(p => p.id !== product.id);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
+
+  // Scroll to top when product page opens or product changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    setSelectedImageIndex(0);
+    setQuantity(1);
+  }, [product.id]);
 
   // Card mode 使用 Seal mode 嘅產品頁樣式
   const isSeal = theme === 'seal' || theme === 'card';

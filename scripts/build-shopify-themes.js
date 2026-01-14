@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const projectRoot = join(__dirname, '..');
 
-const THEMES = ['dark', 'light', 'card', 'seal'];
+const THEMES = ['dark', 'light', 'card', 'seal', 'company'];
 
 const THEME_CONFIGS = {
   dark: {
@@ -38,6 +38,12 @@ const THEME_CONFIGS = {
     bgColor: '#F9F9F9',
     themeColor: '#C83F49',
     bodyClass: 'theme-seal',
+    fontFamily: 'Noto Serif TC',
+  },
+  company: {
+    bgColor: '#F9F9F9',
+    themeColor: '#C83F49',
+    bodyClass: 'theme-company',
     fontFamily: 'Noto Serif TC',
   }
 };

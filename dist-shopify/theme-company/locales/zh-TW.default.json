@@ -1,0 +1,16 @@
+{
+  "general": {
+    "accessibility": {
+      "skip_to_content": "跳至內容"
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "加入購物車",
+      "buy_now": "立即購買"
+    }
+  },
+  "cart": {
+    "title": "購物車"
+  }
+}

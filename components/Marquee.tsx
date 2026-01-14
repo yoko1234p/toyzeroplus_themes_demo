@@ -15,12 +15,12 @@ const Marquee: React.FC<MarqueeProps> = ({ theme }) => {
     : 'bg-black text-[#d4af37] border-black';
 
   return (
-    <div className={`${containerClass} py-2 overflow-hidden whitespace-nowrap border-y uppercase font-bold text-xs tracking-[0.4em] flex transition-colors duration-500`}>
-      <div className="animate-marquee inline-block px-4 font-lhkk">
-        * 限量發售 * 悲情城市恕不退款 * 九龍午夜 * 找回你的記憶 * 快樂印刷 * 
+    <div className={`${containerClass} py-2 overflow-hidden whitespace-nowrap border-y uppercase font-bold text-xs tracking-[0.4em] flex transition-colors duration-500 relative w-full max-w-[100vw]`}>
+      <div className="animate-marquee inline-block px-4 font-lhkk flex-shrink-0">
+        * 限量發售 * 悲情城市恕不退款 * 九龍午夜 * 找回你的記憶 * 快樂印刷 *
       </div>
-      <div className="animate-marquee2 inline-block px-4 absolute top-2 font-lhkk">
-        * 限量發售 * 悲情城市恕不退款 * 九龍午夜 * 找回你的記憶 * 快樂印刷 * 
+      <div className="animate-marquee2 inline-block px-4 absolute top-2 left-0 font-lhkk">
+        * 限量發售 * 悲情城市恕不退款 * 九龍午夜 * 找回你的記憶 * 快樂印刷 *
       </div>
       <style>{`
         @keyframes marquee {

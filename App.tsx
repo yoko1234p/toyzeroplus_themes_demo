@@ -270,6 +270,9 @@ const App: React.FC = () => {
           </div>
         </header>
 
+        {/* Marquee Banner */}
+        <Marquee theme={theme} />
+
         {/* Seal Mode Content Sections */}
         <SealModeSections
           onProductClick={handleMaximProductClick}

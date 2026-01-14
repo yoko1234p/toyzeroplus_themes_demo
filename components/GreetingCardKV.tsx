@@ -58,8 +58,8 @@ const GreetingCardKV: React.FC<GreetingCardKVProps> = ({ stage }) => {
         <div className="absolute bottom-5 right-5 w-4 h-4 border-b-2 border-r-2 border-red-900/40"></div>
 
         {/* Background Watermark */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none overflow-hidden">
-          <span className="font-serif text-[400px] text-red-900 leading-none">喜</span>
+        <div className="absolute inset-0 flex items-center justify-center opacity-[0.05] pointer-events-none select-none overflow-hidden">
+          <img src="/red_hyppe_logo.svg" alt="" className="w-[350px] h-[350px] object-contain" />
         </div>
 
         {/* The Logo Content */}

@@ -6,11 +6,19 @@ interface SealKVProps {
 }
 
 const SealKV: React.FC<SealKVProps> = ({ stage }) => {
-  const [activeCell, setActiveCell] = useState(-1);
-  const hasAnimatedRef = useRef(false);
+  // 如果 stage >= 4（從產品頁返回），直接顯示所有字符
+  const [activeCell, setActiveCell] = useState(stage >= 4 ? 4 : -1);
+  const hasAnimatedRef = useRef(stage >= 4);
   const brandChars = ['快', '樂', '印', '刷'];
 
   useEffect(() => {
+    // 如果 stage >= 4，直接顯示所有字符（跳過動畫）
+    if (stage >= 4) {
+      setActiveCell(4);
+      hasAnimatedRef.current = true;
+      return;
+    }
+
     if (stage < 1 || hasAnimatedRef.current) return;
 
     // Mark animation as started
@@ -53,12 +61,11 @@ const SealKV: React.FC<SealKVProps> = ({ stage }) => {
              >
                 {/* Character with "Light Stamp" Animation */}
                 <div
-                    className={`relative z-10 font-serif font-black text-6xl md:text-7xl text-[#333] leading-none transition-all duration-700 cubic-bezier(0.2, 0.8, 0.2, 1) ${
-                        isRevealed(idx) 
-                            ? 'opacity-100 scale-100 blur-0 translate-y-0' 
+                    className={`relative z-10 font-lhkk font-black text-6xl md:text-7xl text-[#333] leading-none transition-all duration-700 cubic-bezier(0.2, 0.8, 0.2, 1) ${
+                        isRevealed(idx)
+                            ? 'opacity-100 scale-100 blur-0 translate-y-0'
                             : 'opacity-0 scale-110 blur-sm -translate-y-2'
                     }`}
-                    style={{ fontFamily: "'Noto Serif TC', serif" }}
                 >
                     {char}
                     {/* Ink Bleed Texture Overlay */}

@@ -3,40 +3,31 @@ import { Product } from './types';
 
 export const PRODUCTS: Product[] = [
   {
-    id: '1',
-    name: '午夜絲綢',
-    price: 'HK$3,280',
-    category: '服飾',
-    image: 'https://picsum.photos/id/1011/800/1200',
-    description: '一件深藍色的長袍，靈感來自1960年代香港雨後濕潤的街道。',
-    calligraphy: '深藍絲綢'
+    id: 'mx-turnip-pudding-with-conpoy',
+    name: '美心瑤柱蘿蔔糕',
+    price: 'HK$148',
+    category: '蘿蔔糕',
+    image: 'https://www.maximsproducts.com.hk/upload/product/779a50d7-948b-4e3b-ab1e-ee962b0ded74.png',
+    description: '嚴選清甜白蘿蔔，切成8mm絲絲蘿蔔條，加上北海道瑤柱、臘味及蝦米，入口鮮味豐足。',
+    calligraphy: '瑤柱蘿蔔'
   },
   {
-    id: '2',
-    name: '2046 計時碼錶',
-    price: 'HK$9,360',
-    category: '配飾',
-    image: 'https://picsum.photos/id/175/800/1200',
-    description: '捕捉時間與記憶稍縱即逝本質的時計。',
-    calligraphy: '時間流逝'
+    id: 'mx-turnip-pudding-with-mushroom-taro',
+    name: '美心香菇芋粒蘿蔔糕',
+    price: 'HK$102',
+    category: '蘿蔔糕',
+    image: 'https://www.maximsproducts.com.hk/upload/product/4dcf5afc-efcd-4709-a84c-a218b74670e6_400x320.png',
+    description: '蔬食配方，清甜8mm絲絲蘿蔔條配炒至甘香的椴木香菇、炸杏鮑菇及芋粒。',
+    calligraphy: '香菇芋粒'
   },
   {
-    id: '3',
-    name: '重慶森林香氛',
-    price: 'HK$1,400',
-    category: '美妝',
-    image: 'https://picsum.photos/id/353/800/1200',
-    description: '鳳梨罐頭、雨水和煙草的氣味。一種渴望的味道。',
-    calligraphy: '重慶森林'
-  },
-  {
-    id: '4',
-    name: '金閣寺',
-    price: 'HK$6,630',
-    category: '家居',
-    image: 'https://picsum.photos/id/249/800/1200',
-    description: '一座野獸派雕塑，意在黃昏的微光中沉思。',
-    calligraphy: '金色樓閣'
+    id: 'mx-taro-pudding',
+    name: '美心芋頭糕',
+    price: 'HK$148',
+    category: '芋頭糕',
+    image: 'https://www.maximsproducts.com.hk/upload/product/01a5a5c8-7764-4fd7-8c79-daa1b910207c.png',
+    description: '特選香甜新鮮芋頭，厚切成粒，搭配份量十足的惹味甘香臘腸，芋頭綿香四溢。',
+    calligraphy: '芋頭綿香'
   }
 ];
 

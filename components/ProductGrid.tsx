@@ -138,8 +138,10 @@ const CardItem: React.FC<CardItemProps> = ({ product, idx, onAcquire, onProductC
 };
 
 const ProductGrid: React.FC<ProductGridProps> = ({ onAcquire, theme, onProductClick, useShopify = false }) => {
-  // Conditionally fetch Shopify data (hook is always called, but count=0 skips actual fetch)
-  const { products: shopifyProducts, loading, error } = useShopifyProducts(useShopify ? 20 : 0);
+  // Conditionally fetch Shopify data from Happy Printing collection (hook is always called, but count=0 skips actual fetch)
+  const { products: shopifyProducts, loading, error } = useShopifyProducts(
+    useShopify ? { count: 20, collectionHandle: 'happy-printing' } : { count: 0 }
+  );
 
   // Use Shopify data or static data
   const displayProducts = useShopify && shopifyProducts.length > 0

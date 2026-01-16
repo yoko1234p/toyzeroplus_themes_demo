@@ -99,7 +99,7 @@ const SealModeSections: React.FC<SealModeSectionsProps> = ({ onProductClick, sho
 
                         {/* Price / Action */}
                         <div className="mt-4 pt-4 border-t border-dashed border-[#333]/20 flex justify-between items-center">
-                             <span className="font-mono text-lg font-bold text-[#333]">HKD {p.price}</span>
+                             <span className="font-mono text-lg font-bold text-[#333]">{p.price}</span>
                              <button onClick={() => onProductClick?.(p)} className="text-xs text-[#C83F49] font-bold border-b border-[#C83F49] pb-0.5 hover:text-[#B08D57] hover:border-[#B08D57] transition-colors">
                                  立即訂購
                              </button>

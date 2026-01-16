@@ -16,6 +16,12 @@ export const PRODUCTS_QUERY = `
               currencyCode
             }
           }
+          compareAtPriceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+          }
           images(first: 5) {
             edges {
               node {
@@ -57,6 +63,12 @@ export const PRODUCT_BY_HANDLE_QUERY = `
       description
       descriptionHtml
       priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+      }
+      compareAtPriceRange {
         minVariantPrice {
           amount
           currencyCode
@@ -180,6 +192,12 @@ export const COLLECTION_PRODUCTS_QUERY = `
             description
             descriptionHtml
             priceRange {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+            }
+            compareAtPriceRange {
               minVariantPrice {
                 amount
                 currencyCode

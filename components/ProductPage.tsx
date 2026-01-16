@@ -41,7 +41,23 @@ const ProductPage: React.FC<ProductPageProps> = ({
   const isSeal = theme !== 'dark';
   const isDark = theme === 'dark';
 
-  const discount = Math.round((1 - product.price / product.originalPrice) * 100);
+  // 只有當 originalPrice 存在且大於 price 時才計算折扣
+  const hasDiscount = product.originalPrice && product.originalPrice > product.price;
+  const discount = hasDiscount
+    ? Math.round((1 - product.price / product.originalPrice) * 100)
+    : 0;
+
+  // 格式化價格顯示 (處理 number 和 string 兩種類型)
+  const formatPrice = (value: number | string) => {
+    if (typeof value === 'number') {
+      return `HK$${value}`;
+    }
+    // 如果已經有 HK$ 前綴就直接返回
+    if (typeof value === 'string' && value.startsWith('HK$')) {
+      return value;
+    }
+    return `HK$${value}`;
+  };
 
   const getStyles = () => {
     if (isDark) {
@@ -145,14 +161,18 @@ const ProductPage: React.FC<ProductPageProps> = ({
           {/* Price */}
           <div className="flex items-baseline gap-4">
             <span className={`text-3xl font-bold ${styles.accent}`}>
-              ${product.price}
+              {formatPrice(product.price)}
             </span>
-            <span className={`text-lg line-through ${styles.textSub}`}>
-              ${product.originalPrice}
-            </span>
-            <span className={`px-2 py-1 text-xs font-bold bg-red-100 ${styles.accent}`}>
-              -{discount}%
-            </span>
+            {hasDiscount && (
+              <>
+                <span className={`text-lg line-through ${styles.textSub}`}>
+                  {formatPrice(product.originalPrice!)}
+                </span>
+                <span className={`px-2 py-1 text-xs font-bold bg-red-100 ${styles.accent}`}>
+                  -{discount}%
+                </span>
+              </>
+            )}
           </div>
 
           {/* Description */}
@@ -328,8 +348,10 @@ const ProductPage: React.FC<ProductPageProps> = ({
                     {relatedProduct.name}
                   </h3>
                   <div className="flex items-center gap-2">
-                    <span className={`font-bold ${styles.accent}`}>${relatedProduct.price}</span>
-                    <span className={`text-sm line-through ${styles.textSub}`}>${relatedProduct.originalPrice}</span>
+                    <span className={`font-bold ${styles.accent}`}>{formatPrice(relatedProduct.price)}</span>
+                    {relatedProduct.originalPrice && relatedProduct.originalPrice > relatedProduct.price && (
+                      <span className={`text-sm line-through ${styles.textSub}`}>{formatPrice(relatedProduct.originalPrice)}</span>
+                    )}
                   </div>
                 </div>
 

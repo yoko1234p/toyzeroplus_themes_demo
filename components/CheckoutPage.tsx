@@ -86,7 +86,9 @@ const CheckoutPage: React.FC<CheckoutPageProps> = ({ product, onBack, theme }) =
             <div className={`text-[10px] uppercase tracking-[0.5em] mb-2 font-lhkk ${styles.textSub}`}>結帳程序</div>
             <div className="flex justify-between items-end">
               <h2 className={`text-3xl font-serif italic font-lhkk ${styles.textMain}`}>最終清單</h2>
-              <span className="text-red-600 font-mono text-xl">{product.price}</span>
+              <span className="text-red-600 font-mono text-xl">
+                {product.formattedPrice || (typeof product.price === 'number' ? `HK$${product.price}` : product.price)}
+              </span>
             </div>
           </header>
 

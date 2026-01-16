@@ -12,6 +12,12 @@ export interface ShopifyProduct {
       currencyCode: string;
     };
   };
+  compareAtPriceRange?: {
+    minVariantPrice: {
+      amount: string;
+      currencyCode: string;
+    };
+  };
   images: {
     edges: Array<{
       node: {

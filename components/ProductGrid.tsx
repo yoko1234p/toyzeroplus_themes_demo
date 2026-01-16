@@ -123,7 +123,9 @@ const CardItem: React.FC<CardItemProps> = ({ product, idx, onAcquire, onProductC
 
           {/* Price / Action */}
           <div className="mt-4 pt-4 border-t border-dashed border-[#333]/20 flex justify-between items-center">
-            <span className="font-mono text-lg font-bold text-[#333]">{product.price}</span>
+            <span className="font-mono text-lg font-bold text-[#333]">
+              {product.formattedPrice || (typeof product.price === 'number' ? `HK$${product.price}` : product.price)}
+            </span>
             <button
               onClick={(e) => { e.stopPropagation(); handleCardClick(); }}
               className="text-xs text-[#C83F49] font-bold border-b border-[#C83F49] pb-0.5 hover:text-[#B08D57] hover:border-[#B08D57] transition-colors font-lhkk"
@@ -230,7 +232,9 @@ const ProductGrid: React.FC<ProductGridProps> = ({ onAcquire, theme, onProductCl
               <h3 className={`text-xl font-bold font-lhkk tracking-tight leading-none italic transition-colors ${textColor}`}>
                 {product.name}
               </h3>
-              <span className="text-red-700 font-mono text-sm font-bold">{product.price}</span>
+              <span className="text-red-700 font-mono text-sm font-bold">
+                {product.formattedPrice || (typeof product.price === 'number' ? `HK$${product.price}` : product.price)}
+              </span>
             </div>
             <p className={`text-sm leading-relaxed mb-6 font-lhkk transition-colors ${subTextColor}`}>
               {product.description}

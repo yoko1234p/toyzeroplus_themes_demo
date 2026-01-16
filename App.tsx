@@ -43,8 +43,11 @@ const App: React.FC = () => {
   const [aiMessage, setAiMessage] = useState<string>("文字的重量，取決於墨水的濃度...");
   const [loadingAi, setLoadingAi] = useState(false);
 
-  // Shopify Hooks - 用於所有 mode
-  const { products: shopifyProducts, loading: productsLoading } = useShopifyProducts(20);
+  // Shopify Hooks - 用於所有 mode，只用 "happy-printing" collection 嘅產品
+  const { products: shopifyProducts, loading: productsLoading } = useShopifyProducts({
+    count: 20,
+    collectionHandle: 'happy-printing'
+  });
   const { cart, addItem, checkoutUrl, itemCount, loading: cartLoading } = useShopifyCart();
 
   // Map Shopify products to local Product type

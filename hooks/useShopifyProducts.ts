@@ -1,6 +1,11 @@
 // hooks/useShopifyProducts.ts
 import { useState, useEffect } from 'react';
-import { fetchProducts, type ShopifyProduct } from '../services/shopify';
+import { fetchProducts, fetchCollectionProducts, type ShopifyProduct } from '../services/shopify';
+
+interface UseShopifyProductsOptions {
+  count?: number;
+  collectionHandle?: string;
+}
 
 interface UseShopifyProductsResult {
   products: ShopifyProduct[];
@@ -9,7 +14,16 @@ interface UseShopifyProductsResult {
   refetch: () => Promise<void>;
 }
 
-export function useShopifyProducts(count: number = 20): UseShopifyProductsResult {
+export function useShopifyProducts(
+  countOrOptions: number | UseShopifyProductsOptions = 20
+): UseShopifyProductsResult {
+  // 支援舊有 API (count: number) 同新 API (options object)
+  const options = typeof countOrOptions === 'number'
+    ? { count: countOrOptions }
+    : countOrOptions;
+
+  const { count = 20, collectionHandle } = options;
+
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(count > 0);
   const [error, setError] = useState<Error | null>(null);
@@ -26,7 +40,10 @@ export function useShopifyProducts(count: number = 20): UseShopifyProductsResult
     setError(null);
 
     try {
-      const data = await fetchProducts(count);
+      // 如果有 collectionHandle，用 collection query；否則用一般 products query
+      const data = collectionHandle
+        ? await fetchCollectionProducts(collectionHandle, count)
+        : await fetchProducts(count);
       setProducts(data);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Unknown error'));
@@ -38,7 +55,7 @@ export function useShopifyProducts(count: number = 20): UseShopifyProductsResult
 
   useEffect(() => {
     fetchData();
-  }, [count]);
+  }, [count, collectionHandle]);
 
   return {
     products,

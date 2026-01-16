@@ -37,8 +37,8 @@ const ProductPage: React.FC<ProductPageProps> = ({
     setQuantity(1);
   }, [product.id]);
 
-  // Card, Seal, Company mode 使用相同嘅產品頁樣式
-  const isSeal = theme === 'seal' || theme === 'card' || theme === 'company';
+  // 所有非 Dark mode 都使用 Seal 樣式嘅產品頁
+  const isSeal = theme !== 'dark';
   const isDark = theme === 'dark';
 
   const discount = Math.round((1 - product.price / product.originalPrice) * 100);

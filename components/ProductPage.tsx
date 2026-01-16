@@ -7,6 +7,7 @@
 import React, { useState, useEffect } from 'react';
 import { MaximProduct, PRODUCTS } from '../data/products';
 import { Product, ThemeMode } from '../types';
+import AddToCartAnimation from './AddToCartAnimation';
 
 // 聯合類型支援兩種 product interface
 type ProductType = Product | MaximProduct;
@@ -30,6 +31,13 @@ const ProductPage: React.FC<ProductPageProps> = ({
   const relatedProducts = PRODUCTS.filter(p => p.id !== product.id);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [showCartAnimation, setShowCartAnimation] = useState(false);
+
+  // 處理加入購物車
+  const handleAddToCartClick = () => {
+    onAddToCart?.(product);
+    setShowCartAnimation(true);
+  };
 
   // 確保 images array 存在，fallback 到單一 image
   const productImages = product.images && product.images.length > 0 ? product.images : [product.image];
@@ -324,7 +332,7 @@ const ProductPage: React.FC<ProductPageProps> = ({
               </button>
             </div>
             <button
-              onClick={() => onAddToCart?.(product)}
+              onClick={handleAddToCartClick}
               className={`flex-1 py-3 px-8 font-bold tracking-widest text-sm transition-colors font-lhkk ${styles.button}`}
             >
               加入購物車
@@ -426,6 +434,12 @@ const ProductPage: React.FC<ProductPageProps> = ({
           -webkit-box-decoration-break: clone;
         }
       `}</style>
+
+      {/* 加入購物車動畫 */}
+      <AddToCartAnimation
+        show={showCartAnimation}
+        onComplete={() => setShowCartAnimation(false)}
+      />
     </div>
   );
 };

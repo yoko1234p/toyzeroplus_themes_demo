@@ -39,6 +39,12 @@ export interface ShopifyProduct {
       };
     }>;
   };
+  metafields?: Array<{
+    namespace: string;
+    key: string;
+    value: string;
+    type: string;
+  } | null>;
 }
 
 export interface ShopifyProductsResponse {

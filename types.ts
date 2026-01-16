@@ -1,3 +1,9 @@
+export interface PickupMethod {
+  id: string;
+  name: string;
+  icon: string;
+  description: string;
+}
 
 export interface Product {
   id: string;
@@ -13,6 +19,14 @@ export interface Product {
   description: string;
   calligraphy: string;
   variantId?: string; // Shopify variant ID for cart
+  // Metafields
+  weight?: string;
+  features?: string[];
+  ingredients?: string[];
+  pickupMethods?: PickupMethod[];
+  redemptionPeriod?: string;
+  redemptionLocations?: string[];
+  madeIn?: string;
 }
 
 export enum LayoutMode {

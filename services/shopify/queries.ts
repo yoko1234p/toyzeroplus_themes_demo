@@ -43,6 +43,19 @@ export const PRODUCTS_QUERY = `
               }
             }
           }
+          metafields(identifiers: [
+            { namespace: "custom", key: "product_features" },
+            { namespace: "custom", key: "foot_weight" },
+            { namespace: "custom", key: "main_ingredients" },
+            { namespace: "custom", key: "redemption_period" },
+            { namespace: "custom", key: "redemption_locations" },
+            { namespace: "custom", key: "made_in" }
+          ]) {
+            namespace
+            key
+            value
+            type
+          }
         }
         cursor
       }
@@ -94,6 +107,19 @@ export const PRODUCT_BY_HANDLE_QUERY = `
             availableForSale
           }
         }
+      }
+      metafields(identifiers: [
+        { namespace: "custom", key: "product_features" },
+        { namespace: "custom", key: "foot_weight" },
+        { namespace: "custom", key: "main_ingredients" },
+        { namespace: "custom", key: "redemption_period" },
+        { namespace: "custom", key: "redemption_locations" },
+        { namespace: "custom", key: "made_in" }
+      ]) {
+        namespace
+        key
+        value
+        type
       }
     }
   }
@@ -223,6 +249,19 @@ export const COLLECTION_PRODUCTS_QUERY = `
                   availableForSale
                 }
               }
+            }
+            metafields(identifiers: [
+              { namespace: "custom", key: "product_features" },
+              { namespace: "custom", key: "foot_weight" },
+              { namespace: "custom", key: "main_ingredients" },
+              { namespace: "custom", key: "redemption_period" },
+              { namespace: "custom", key: "redemption_locations" },
+              { namespace: "custom", key: "made_in" }
+            ]) {
+              namespace
+              key
+              value
+              type
             }
           }
           cursor

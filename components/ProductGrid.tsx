@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Product, ThemeMode } from '../types';
 import { PRODUCTS } from '../constants';
 import { PRODUCTS as MAXIM_PRODUCTS, MaximProduct } from '../data/products';
+import { useShopifyProducts } from '../hooks/useShopifyProducts';
+import { mapShopifyProducts } from '../services/shopify';
 
 // Helper function to render text with highlighted portion
 const renderHighlightedText = (text: string, highlightText?: string) => {
@@ -23,6 +25,7 @@ interface ProductGridProps {
   onAcquire: (product: Product) => void;
   theme: ThemeMode;
   onProductClick?: (product: MaximProduct) => void;
+  useShopify?: boolean; // 是否使用 Shopify 數據
 }
 
 // Hook for scroll reveal animation
@@ -134,7 +137,15 @@ const CardItem: React.FC<CardItemProps> = ({ product, idx, onAcquire, onProductC
   );
 };
 
-const ProductGrid: React.FC<ProductGridProps> = ({ onAcquire, theme, onProductClick }) => {
+const ProductGrid: React.FC<ProductGridProps> = ({ onAcquire, theme, onProductClick, useShopify = false }) => {
+  // Conditionally fetch Shopify data (hook is always called, but count=0 skips actual fetch)
+  const { products: shopifyProducts, loading, error } = useShopifyProducts(useShopify ? 20 : 0);
+
+  // Use Shopify data or static data
+  const displayProducts = useShopify && shopifyProducts.length > 0
+    ? mapShopifyProducts(shopifyProducts)
+    : PRODUCTS;
+
   const isDark = theme === 'dark';
   const isCard = theme === 'card';
   const borderColor = isDark ? 'border-zinc-800' : 'border-black';
@@ -143,12 +154,26 @@ const ProductGrid: React.FC<ProductGridProps> = ({ onAcquire, theme, onProductCl
   const subTextColor = isDark ? 'text-zinc-500' : 'text-zinc-600';
   const buttonBorder = isDark ? 'border-zinc-700 hover:border-red-600 hover:text-red-500' : 'border-black hover:bg-black hover:text-white';
 
+  // Loading state
+  if (useShopify && loading) {
+    return (
+      <div className="py-12 px-4 text-center">
+        <div className="font-lhkk text-xl text-[#333]">載入中...</div>
+      </div>
+    );
+  }
+
+  // Error fallback - log warning and use static data
+  if (useShopify && error) {
+    console.warn('Shopify fetch failed, falling back to static data:', error);
+  }
+
   // Card Mode - Row Layout with 3 products
   if (isCard) {
     return (
       <div className="py-12 px-4 md:px-8">
         <div className="flex flex-col md:flex-row gap-6 md:gap-8 justify-center items-stretch max-w-6xl mx-auto">
-          {PRODUCTS.slice(0, 3).map((product, idx) => (
+          {displayProducts.slice(0, 3).map((product, idx) => (
             <CardItem key={product.id} product={product} idx={idx} onAcquire={onAcquire} onProductClick={onProductClick} />
           ))}
         </div>
@@ -178,7 +203,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ onAcquire, theme, onProductCl
   // Default Grid Layout (Dark / Light modes)
   return (
     <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border-y transition-colors duration-500 ${borderColor}`}>
-      {PRODUCTS.map((product, idx) => (
+      {displayProducts.map((product, idx) => (
         <div
           key={product.id}
           className={`relative group p-8 transition-all duration-700 overflow-hidden ${hoverBg} ${borderColor} ${idx < 2 ? 'border-r' : ''} ${idx < 3 ? 'border-b md:border-b-0' : ''}`}

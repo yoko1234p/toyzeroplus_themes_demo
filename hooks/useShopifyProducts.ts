@@ -11,10 +11,17 @@ interface UseShopifyProductsResult {
 
 export function useShopifyProducts(count: number = 20): UseShopifyProductsResult {
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(count > 0);
   const [error, setError] = useState<Error | null>(null);
 
   const fetchData = async () => {
+    // Skip fetch if count is 0 or less
+    if (count <= 0) {
+      setLoading(false);
+      setProducts([]);
+      return;
+    }
+
     setLoading(true);
     setError(null);
 

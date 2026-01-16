@@ -21,9 +21,14 @@ import { MaximProduct } from './data/products';
 const SHOW_TEXT_SECTIONS = false;
 
 const App: React.FC = () => {
+  // 從 Shopify 環境讀取 theme mode，否則使用 'card' 作為默認值（開發環境）
+  const getInitialTheme = (): ThemeMode => {
+    const shopifyTheme = (window as any).THEME_MODE as ThemeMode | undefined;
+    return shopifyTheme || 'card';
+  };
+
   const [view, setView] = useState<'intro' | 'leading' | 'checkout' | 'product'>('intro');
-  // Default 'card' (Greeting Card Preview mode)
-  const [theme, setTheme] = useState<ThemeMode>('card');
+  const [theme, setTheme] = useState<ThemeMode>(getInitialTheme());
 
   // Animation State for Light/Card modes
   // 0: Init, 1: Draw Strokes/Card Enter, 2: Fill Text, 3: Show Hero Content, 4: Complete

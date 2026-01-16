@@ -4,7 +4,7 @@
  * 將 Vite build 嘅 output 轉換成 Shopify themes
  */
 
-import { readFileSync, writeFileSync, copyFileSync, mkdirSync, existsSync, rmSync } from 'fs';
+import { readFileSync, writeFileSync, copyFileSync, mkdirSync, existsSync, rmSync, readdirSync, cpSync } from 'fs';
 import { join, dirname } from 'path';
 import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
@@ -52,6 +52,14 @@ function ensureDir(dir) {
   if (!existsSync(dir)) {
     mkdirSync(dir, { recursive: true });
   }
+}
+
+function copyDirIfExists(src, dest) {
+  if (existsSync(src)) {
+    cpSync(src, dest, { recursive: true });
+    return true;
+  }
+  return false;
 }
 
 function generateThemeLiquid(themeName) {
@@ -296,27 +304,59 @@ async function buildThemes() {
     console.log(`🔨 Building theme-${themeName}...`);
 
     const themeDir = join(distShopify, `theme-${themeName}`);
+    const themeSourceDir = join(projectRoot, `theme-${themeName}`);
 
     // 清理並重建目錄
     if (existsSync(themeDir)) {
       rmSync(themeDir, { recursive: true });
     }
 
-    // 創建目錄結構
-    ensureDir(join(themeDir, 'assets'));
-    ensureDir(join(themeDir, 'config'));
-    ensureDir(join(themeDir, 'layout'));
-    ensureDir(join(themeDir, 'locales'));
-    ensureDir(join(themeDir, 'templates'));
+    // 檢查是否有完整嘅 theme 源目錄（如 theme-company）
+    if (existsSync(themeSourceDir)) {
+      console.log(`   📂 Using existing theme source: theme-${themeName}/`);
 
-    // 寫入文件
-    writeFileSync(join(themeDir, 'layout', 'theme.liquid'), generateThemeLiquid(themeName));
-    writeFileSync(join(themeDir, 'templates', 'index.liquid'), generateIndexLiquid());
-    writeFileSync(join(themeDir, 'templates', 'product.liquid'), generateProductLiquid());
-    writeFileSync(join(themeDir, 'config', 'settings_schema.json'), generateSettingsSchema());
-    writeFileSync(join(themeDir, 'locales', 'zh-TW.default.json'), generateLocaleJson());
-    writeFileSync(join(themeDir, 'assets', 'base.css'), baseCssContent);
-    writeFileSync(join(themeDir, 'assets', `theme-${themeName}.js`), jsContent);
+      // 創建目錄結構
+      ensureDir(join(themeDir, 'assets'));
+      ensureDir(join(themeDir, 'config'));
+      ensureDir(join(themeDir, 'layout'));
+      ensureDir(join(themeDir, 'locales'));
+      ensureDir(join(themeDir, 'templates'));
+      ensureDir(join(themeDir, 'sections'));
+      ensureDir(join(themeDir, 'snippets'));
+
+      // 複製所有目錄內容
+      copyDirIfExists(join(themeSourceDir, 'sections'), join(themeDir, 'sections'));
+      copyDirIfExists(join(themeSourceDir, 'snippets'), join(themeDir, 'snippets'));
+      copyDirIfExists(join(themeSourceDir, 'templates'), join(themeDir, 'templates'));
+      copyDirIfExists(join(themeSourceDir, 'config'), join(themeDir, 'config'));
+      copyDirIfExists(join(themeSourceDir, 'locales'), join(themeDir, 'locales'));
+      copyDirIfExists(join(themeSourceDir, 'layout'), join(themeDir, 'layout'));
+      copyDirIfExists(join(themeSourceDir, 'assets'), join(themeDir, 'assets'));
+
+      // 確保有 base.css
+      if (!existsSync(join(themeDir, 'assets', 'base.css'))) {
+        writeFileSync(join(themeDir, 'assets', 'base.css'), baseCssContent);
+      }
+
+      // 確保有 theme JS
+      writeFileSync(join(themeDir, 'assets', `theme-${themeName}.js`), jsContent);
+    } else {
+      // 創建目錄結構
+      ensureDir(join(themeDir, 'assets'));
+      ensureDir(join(themeDir, 'config'));
+      ensureDir(join(themeDir, 'layout'));
+      ensureDir(join(themeDir, 'locales'));
+      ensureDir(join(themeDir, 'templates'));
+
+      // 寫入文件（使用生成嘅模板）
+      writeFileSync(join(themeDir, 'layout', 'theme.liquid'), generateThemeLiquid(themeName));
+      writeFileSync(join(themeDir, 'templates', 'index.liquid'), generateIndexLiquid());
+      writeFileSync(join(themeDir, 'templates', 'product.liquid'), generateProductLiquid());
+      writeFileSync(join(themeDir, 'config', 'settings_schema.json'), generateSettingsSchema());
+      writeFileSync(join(themeDir, 'locales', 'zh-TW.default.json'), generateLocaleJson());
+      writeFileSync(join(themeDir, 'assets', 'base.css'), baseCssContent);
+      writeFileSync(join(themeDir, 'assets', `theme-${themeName}.js`), jsContent);
+    }
 
     // 複製字體文件
     const fontsDir = join(projectRoot, 'public', 'fonts');

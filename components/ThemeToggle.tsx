@@ -8,6 +8,11 @@ interface ThemeToggleProps {
 }
 
 const ThemeToggle: React.FC<ThemeToggleProps> = ({ theme, onToggle }) => {
+  // 在 Shopify 環境隱藏切換器（theme mode 已被鎖定）
+  if (typeof window !== 'undefined' && (window as any).THEME_MODE) {
+    return null;
+  }
+
   const isDark = theme === 'dark';
   const isSeal = theme === 'seal';
   const isCompany = theme === 'company';

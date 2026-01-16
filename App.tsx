@@ -13,9 +13,13 @@ import CheckoutPage from './components/CheckoutPage';
 import ProductPage from './components/ProductPage';
 import FadeIn from './components/FadeIn';
 import ThemeToggle from './components/ThemeToggle';
+import CartButton from './components/CartButton';
 import { GoogleGenAI } from "@google/genai";
 import { Product, ThemeMode } from './types';
 import { MaximProduct } from './data/products';
+import { useShopifyProducts } from './hooks/useShopifyProducts';
+import { useShopifyCart } from './hooks/useShopifyCart';
+import { mapShopifyProducts } from './services/shopify';
 
 // 控制是否顯示文字內容區塊（字裏行間、以前我以為...等）
 const SHOW_TEXT_SECTIONS = false;
@@ -38,6 +42,13 @@ const App: React.FC = () => {
   const [selectedMaximProduct, setSelectedMaximProduct] = useState<MaximProduct | null>(null);
   const [aiMessage, setAiMessage] = useState<string>("文字的重量，取決於墨水的濃度...");
   const [loadingAi, setLoadingAi] = useState(false);
+
+  // Shopify Hooks - 用於所有 mode
+  const { products: shopifyProducts, loading: productsLoading } = useShopifyProducts(20);
+  const { cart, addItem, checkoutUrl, itemCount, loading: cartLoading } = useShopifyCart();
+
+  // Map Shopify products to local Product type
+  const mappedShopifyProducts = shopifyProducts.length > 0 ? mapShopifyProducts(shopifyProducts) : [];
 
   // Initial Boot Logic
   useEffect(() => {
@@ -130,6 +141,22 @@ const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // 處理加入購物車 - 需要找到對應嘅 Shopify variantId
+  const handleAddToCart = async (product: MaximProduct) => {
+    // 從 mappedShopifyProducts 找到對應嘅產品獲取 variantId
+    const shopifyProduct = mappedShopifyProducts.find(p => p.name === product.name || p.id === product.id);
+    if (shopifyProduct?.variantId) {
+      try {
+        await addItem(shopifyProduct.variantId, 1);
+        console.log('Added to cart:', product.name);
+      } catch (err) {
+        console.error('Failed to add to cart:', err);
+      }
+    } else {
+      console.warn('No variantId found for product:', product.name);
+    }
+  };
+
   // Define Theme Colors
   const isDark = theme === 'dark';
   const isSeal = theme === 'seal';
@@ -183,7 +210,7 @@ const App: React.FC = () => {
   }
 
   if (view === 'product' && selectedMaximProduct) {
-    return <ProductPage product={selectedMaximProduct} onBack={handleBack} onProductClick={handleMaximProductClick} theme={theme} />;
+    return <ProductPage product={selectedMaximProduct} onBack={handleBack} onProductClick={handleMaximProductClick} onAddToCart={handleAddToCart} theme={theme} />;
   }
 
   const CornerLabel = ({ char, position }: { char: string, position: string }) => {
@@ -297,6 +324,7 @@ const App: React.FC = () => {
         <SealModeSections
           onProductClick={handleMaximProductClick}
           showTextSections={SHOW_TEXT_SECTIONS}
+          products={mappedShopifyProducts}
         />
 
         {/* Footer - Card Mode Style */}
@@ -310,6 +338,14 @@ const App: React.FC = () => {
             <div className="text-red-700 tracking-[0.8em]">專為傷心人排版</div>
           </div>
         </footer>
+
+        {/* Shopping Cart Button */}
+        <CartButton
+          itemCount={itemCount}
+          checkoutUrl={checkoutUrl}
+          loading={cartLoading}
+          theme={theme}
+        />
 
         <style>{`
           .writing-vertical-rl { writing-mode: vertical-rl; }
@@ -405,6 +441,15 @@ const App: React.FC = () => {
         <SealModeSections
           onProductClick={handleMaximProductClick}
           showTextSections={SHOW_TEXT_SECTIONS}
+          products={mappedShopifyProducts}
+        />
+
+        {/* Shopping Cart Button */}
+        <CartButton
+          itemCount={itemCount}
+          checkoutUrl={checkoutUrl}
+          loading={cartLoading}
+          theme={theme}
         />
       </div>
     );
@@ -540,7 +585,7 @@ const App: React.FC = () => {
             </div>
           </FadeIn>
           <FadeIn delay={300}>
-            <ProductGrid onAcquire={handleAcquire} theme={theme} onProductClick={handleMaximProductClick} />
+            <ProductGrid onAcquire={handleAcquire} theme={theme} onProductClick={handleMaximProductClick} useShopify={true} />
           </FadeIn>
         </section>
 
@@ -575,6 +620,14 @@ const App: React.FC = () => {
           <div className={`${isDark ? 'text-red-950' : 'text-red-700'} tracking-[0.8em]`}>專為傷心人排版</div>
         </div>
       </footer>
+
+      {/* Shopping Cart Button */}
+      <CartButton
+        itemCount={itemCount}
+        checkoutUrl={checkoutUrl}
+        loading={cartLoading}
+        theme={theme}
+      />
     </div>
   );
 }

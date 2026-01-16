@@ -4,6 +4,7 @@ import type { Product } from '../../types';
 
 export function mapShopifyProductToProduct(shopifyProduct: ShopifyProduct): Product {
   const firstImage = shopifyProduct.images.edges[0]?.node;
+  const firstVariant = shopifyProduct.variants.edges[0]?.node;
   const price = shopifyProduct.priceRange.minVariantPrice.amount;
   const currency = shopifyProduct.priceRange.minVariantPrice.currencyCode;
 
@@ -20,6 +21,7 @@ export function mapShopifyProductToProduct(shopifyProduct: ShopifyProduct): Prod
     image: firstImage?.url || '/placeholder.jpg',
     description: shopifyProduct.description,
     calligraphy: shopifyProduct.title, // 可以從 metafield 獲取
+    variantId: firstVariant?.id, // Shopify variant ID for cart
   };
 }
 

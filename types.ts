@@ -7,6 +7,7 @@ export interface Product {
   image: string;
   description: string;
   calligraphy: string;
+  variantId?: string; // Shopify variant ID for cart
 }
 
 export enum LayoutMode {

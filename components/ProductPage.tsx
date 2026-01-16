@@ -1,17 +1,21 @@
 /**
  * Product Detail Page Component
  * 產品詳情頁面
+ * 支援 Shopify Product interface 及 metafields 數據
  */
 
 import React, { useState, useEffect } from 'react';
 import { MaximProduct, PRODUCTS } from '../data/products';
-import { ThemeMode } from '../types';
+import { Product, ThemeMode } from '../types';
+
+// 聯合類型支援兩種 product interface
+type ProductType = Product | MaximProduct;
 
 interface ProductPageProps {
-  product: MaximProduct;
+  product: ProductType;
   onBack: () => void;
-  onAddToCart?: (product: MaximProduct) => void;
-  onProductClick?: (product: MaximProduct) => void;
+  onAddToCart?: (product: ProductType) => void;
+  onProductClick?: (product: ProductType) => void;
   theme?: ThemeMode;
 }
 
@@ -41,13 +45,43 @@ const ProductPage: React.FC<ProductPageProps> = ({
   const isSeal = theme !== 'dark';
   const isDark = theme === 'dark';
 
+  // Helper: 檢查係咪 Shopify Product (有 formattedPrice)
+  const isShopifyProduct = (p: ProductType): p is Product => 'formattedPrice' in p;
+
+  // 獲取價格數值（處理 number 同 string 兩種類型）
+  const getPriceNumber = (value: number | string | undefined): number => {
+    if (value === undefined) return 0;
+    if (typeof value === 'number') return value;
+    const parsed = parseFloat(value.replace(/[^0-9.]/g, ''));
+    return isNaN(parsed) ? 0 : parsed;
+  };
+
+  const priceNum = getPriceNumber(product.price);
+  const originalPriceNum = getPriceNumber(product.originalPrice);
+
   // 只有當 originalPrice 存在且大於 price 時才計算折扣
-  const hasDiscount = product.originalPrice && product.originalPrice > product.price;
+  const hasDiscount = originalPriceNum > 0 && originalPriceNum > priceNum;
   const discount = hasDiscount
-    ? Math.round((1 - product.price / product.originalPrice) * 100)
+    ? Math.round((1 - priceNum / originalPriceNum) * 100)
     : 0;
 
-  // 格式化價格顯示 (處理 number 和 string 兩種類型)
+  // 格式化價格顯示 - 優先使用 formattedPrice
+  const getFormattedPrice = (): string => {
+    if (isShopifyProduct(product) && product.formattedPrice) {
+      return product.formattedPrice;
+    }
+    return `HK$${priceNum}`;
+  };
+
+  const getFormattedOriginalPrice = (): string | undefined => {
+    if (!hasDiscount) return undefined;
+    if (isShopifyProduct(product) && product.formattedOriginalPrice) {
+      return product.formattedOriginalPrice;
+    }
+    return `HK$${originalPriceNum}`;
+  };
+
+  // 格式化價格顯示 (fallback 處理 number 和 string 兩種類型)
   const formatPrice = (value: number | string) => {
     if (typeof value === 'number') {
       return `HK$${value}`;
@@ -148,25 +182,28 @@ const ProductPage: React.FC<ProductPageProps> = ({
           {/* Title & Price */}
           <div>
             <p className={`text-xs tracking-widest uppercase mb-2 ${styles.textSub}`}>
-              {product.category === 'turnip-pudding' ? '蘿蔔糕' : '芋頭糕'}
+              {product.category === 'turnip-pudding' ? '蘿蔔糕' : product.category === 'taro-pudding' ? '芋頭糕' : product.category}
             </p>
             <h1
               className={`text-3xl md:text-4xl font-bold mb-2 font-lhkk ${styles.text}`}
             >
               {product.name}
             </h1>
-            <p className={`text-sm ${styles.textSub}`}>{product.nameEn}</p>
+            {/* nameEn 只存在於 MaximProduct */}
+            {'nameEn' in product && product.nameEn && (
+              <p className={`text-sm ${styles.textSub}`}>{product.nameEn}</p>
+            )}
           </div>
 
-          {/* Price */}
+          {/* Price - 使用 formattedPrice */}
           <div className="flex items-baseline gap-4">
             <span className={`text-3xl font-bold ${styles.accent}`}>
-              {formatPrice(product.price)}
+              {getFormattedPrice()}
             </span>
-            {hasDiscount && (
+            {hasDiscount && getFormattedOriginalPrice() && (
               <>
                 <span className={`text-lg line-through ${styles.textSub}`}>
-                  {formatPrice(product.originalPrice!)}
+                  {getFormattedOriginalPrice()}
                 </span>
                 <span className={`px-2 py-1 text-xs font-bold bg-red-100 ${styles.accent}`}>
                   -{discount}%
@@ -175,19 +212,28 @@ const ProductPage: React.FC<ProductPageProps> = ({
             )}
           </div>
 
-          {/* Description */}
-          {product.detailedDescription && (
+          {/* Description - 支援 detailedDescription (MaximProduct) 或 description (Product) */}
+          {(('detailedDescription' in product && product.detailedDescription) || product.description) && (
             <div className={`py-6 border-t border-b ${styles.border}`}>
               <p className={`text-base leading-relaxed font-lhkk ${styles.text}`}>
-                {product.detailedHighlightText && product.detailedDescription.includes(product.detailedHighlightText) ? (
-                  <>
-                    {product.detailedDescription.split(product.detailedHighlightText)[0]}
-                    <span className="product-highlight-text">{product.detailedHighlightText}</span>
-                    {product.detailedDescription.split(product.detailedHighlightText).slice(1).join(product.detailedHighlightText)}
-                  </>
-                ) : (
-                  product.detailedDescription
-                )}
+                {(() => {
+                  // 優先使用 detailedDescription (MaximProduct)
+                  const descText = ('detailedDescription' in product && product.detailedDescription)
+                    ? product.detailedDescription
+                    : product.description;
+                  const highlightText = ('detailedHighlightText' in product) ? product.detailedHighlightText : undefined;
+
+                  if (highlightText && descText.includes(highlightText)) {
+                    return (
+                      <>
+                        {descText.split(highlightText)[0]}
+                        <span className="product-highlight-text">{highlightText}</span>
+                        {descText.split(highlightText).slice(1).join(highlightText)}
+                      </>
+                    );
+                  }
+                  return descText;
+                })()}
               </p>
             </div>
           )}
@@ -231,8 +277,8 @@ const ProductPage: React.FC<ProductPageProps> = ({
             </div>
           )}
 
-          {/* Redemption Info */}
-          {(product.redemptionPeriod || product.redemptionLocations || product.weight || product.madeIn) && (
+          {/* Redemption Info - 支援 Product 同 MaximProduct 嘅欄位 */}
+          {(product.redemptionPeriod || product.redemptionLocations || product.weight || product.madeIn || ('dimensions' in product && product.dimensions)) && (
             <div className={`text-sm ${styles.textSub} space-y-2`}>
               {product.redemptionPeriod && (
                 <p><strong className={styles.text}>換領期：</strong>{product.redemptionPeriod}</p>
@@ -250,7 +296,8 @@ const ProductPage: React.FC<ProductPageProps> = ({
               {product.weight && (
                 <p><strong className={styles.text}>重量：</strong>{product.weight}</p>
               )}
-              {product.dimensions && (
+              {/* dimensions 只存在於 MaximProduct */}
+              {'dimensions' in product && product.dimensions && (
                 <p><strong className={styles.text}>尺寸：</strong>{product.dimensions}</p>
               )}
               {product.madeIn && (

@@ -17,8 +17,11 @@ const renderHighlightedText = (text: string, highlightText?: string) => {
   );
 };
 
+// 支援 Product 同 MaximProduct 兩種類型
+type ProductType = Product | MaximProduct;
+
 interface SealModeSectionsProps {
-  onProductClick?: (product: MaximProduct) => void;
+  onProductClick?: (product: ProductType) => void;
   showTextSections?: boolean;
   products?: Product[];
 }

@@ -39,7 +39,8 @@ const App: React.FC = () => {
   const [lightModeStage, setLightModeStage] = useState(0);
 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [selectedMaximProduct, setSelectedMaximProduct] = useState<MaximProduct | null>(null);
+  // 支援 Shopify Product 同 MaximProduct 兩種類型
+  const [selectedMaximProduct, setSelectedMaximProduct] = useState<Product | MaximProduct | null>(null);
   const [aiMessage, setAiMessage] = useState<string>("文字的重量，取決於墨水的濃度...");
   const [loadingAi, setLoadingAi] = useState(false);
 
@@ -138,15 +139,28 @@ const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'auto' });
   };
 
-  const handleMaximProductClick = (product: MaximProduct) => {
+  // 支援 Shopify Product 同 MaximProduct 兩種類型
+  const handleMaximProductClick = (product: Product | MaximProduct) => {
     setSelectedMaximProduct(product);
     setView('product');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // 處理加入購物車 - 需要找到對應嘅 Shopify variantId
-  const handleAddToCart = async (product: MaximProduct) => {
-    // 從 mappedShopifyProducts 找到對應嘅產品獲取 variantId
+  // 處理加入購物車 - 支援 Shopify Product 同 MaximProduct
+  const handleAddToCart = async (product: Product | MaximProduct) => {
+    // 如果 product 已經有 variantId（Shopify Product），直接使用
+    if ('variantId' in product && product.variantId) {
+      try {
+        await addItem(product.variantId, 1);
+        console.log('Added to cart:', product.name);
+        return;
+      } catch (err) {
+        console.error('Failed to add to cart:', err);
+        return;
+      }
+    }
+
+    // 否則從 mappedShopifyProducts 找到對應嘅產品獲取 variantId
     const shopifyProduct = mappedShopifyProducts.find(p => p.name === product.name || p.id === product.id);
     if (shopifyProduct?.variantId) {
       try {

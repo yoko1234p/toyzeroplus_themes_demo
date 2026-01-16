@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { PRODUCTS, MaximProduct } from '../data/products';
+import { Product } from '../types';
 
 // Helper function to render text with highlighted portion
 const renderHighlightedText = (text: string, highlightText?: string) => {
@@ -19,6 +20,7 @@ const renderHighlightedText = (text: string, highlightText?: string) => {
 interface SealModeSectionsProps {
   onProductClick?: (product: MaximProduct) => void;
   showTextSections?: boolean;
+  products?: Product[];
 }
 
 const useScrollReveal = () => {
@@ -51,9 +53,9 @@ const GridBox: React.FC<{ children: React.ReactNode; className?: string; delay?:
     );
 };
 
-const SealModeSections: React.FC<SealModeSectionsProps> = ({ onProductClick, showTextSections = false }) => {
-  // 使用快樂印刷產品數據
-  const products = PRODUCTS;
+const SealModeSections: React.FC<SealModeSectionsProps> = ({ onProductClick, showTextSections = false, products: propProducts }) => {
+  // 使用 Shopify products 如有提供，否則使用靜態數據
+  const products = propProducts && propProducts.length > 0 ? propProducts : PRODUCTS;
 
   return (
     <div className="bg-transparent relative z-10 w-full max-w-7xl mx-auto px-4 md:px-12 py-24 space-y-24 md:space-y-32">
@@ -67,7 +69,7 @@ const SealModeSections: React.FC<SealModeSectionsProps> = ({ onProductClick, sho
 
                     {/* Type Tag - 放喺 overflow-hidden 外面確保唔會被 clip */}
                     <div className="absolute -top-2 -right-2 bg-[#C83F49] text-white text-[10px] py-1 px-2 font-serif tracking-widest writing-vertical-rl h-16 shadow-md z-20">
-                        {p.category === 'turnip-pudding' ? '蘿蔔糕' : '芋頭糕'}
+                        {(p as any).category === 'turnip-pudding' ? '蘿蔔糕' : '芋頭糕'}
                     </div>
 
                     {/* Inner Border (Double Line) */}
@@ -86,12 +88,12 @@ const SealModeSections: React.FC<SealModeSectionsProps> = ({ onProductClick, sho
                         {/* Content */}
                         <div className="text-center mt-auto">
                             <h3 className="text-2xl font-lhkk font-black text-[#333] mb-1 h-8 flex items-center justify-center">{p.name}</h3>
-                            <p className="text-[10px] text-[#B08D57] tracking-[0.2em] uppercase mb-4 font-mono h-8 flex items-center justify-center">{p.nameEn}</p>
+                            <p className="text-[10px] text-[#B08D57] tracking-[0.2em] uppercase mb-4 font-mono h-8 flex items-center justify-center">{(p as any).nameEn || ''}</p>
 
                             <div className="w-8 h-px bg-[#333]/20 mx-auto mb-4"></div>
 
                             <p className="text-sm text-[#333]/80 leading-relaxed font-serif mb-6 line-clamp-2 h-12">
-                                {renderHighlightedText(p.description, p.highlightText)}
+                                {renderHighlightedText(p.description || '', (p as any).highlightText)}
                             </p>
                         </div>
 

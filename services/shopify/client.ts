@@ -8,7 +8,7 @@ export function getShopifyClient(): StorefrontApiClient {
 
   const storeDomain = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN;
   const accessToken = import.meta.env.VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
-  const apiVersion = import.meta.env.VITE_SHOPIFY_API_VERSION || '2025-01';
+  const apiVersion = import.meta.env.VITE_SHOPIFY_API_VERSION || '2026-01';
 
   if (!storeDomain || !accessToken) {
     throw new Error('Missing Shopify environment variables. Check .env.local file.');
@@ -17,7 +17,7 @@ export function getShopifyClient(): StorefrontApiClient {
   client = createStorefrontApiClient({
     storeDomain,
     apiVersion,
-    privateAccessToken: accessToken,
+    publicAccessToken: accessToken,
   });
 
   return client;

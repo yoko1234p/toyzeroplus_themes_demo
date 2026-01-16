@@ -27,6 +27,9 @@ const ProductPage: React.FC<ProductPageProps> = ({
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
+  // 確保 images array 存在，fallback 到單一 image
+  const productImages = product.images && product.images.length > 0 ? product.images : [product.image];
+
   // Scroll to top when product page opens or product changes
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -34,8 +37,8 @@ const ProductPage: React.FC<ProductPageProps> = ({
     setQuantity(1);
   }, [product.id]);
 
-  // Card mode 使用 Seal mode 嘅產品頁樣式
-  const isSeal = theme === 'seal' || theme === 'card';
+  // Card, Seal, Company mode 使用相同嘅產品頁樣式
+  const isSeal = theme === 'seal' || theme === 'card' || theme === 'company';
   const isDark = theme === 'dark';
 
   const discount = Math.round((1 - product.price / product.originalPrice) * 100);
@@ -98,16 +101,16 @@ const ProductPage: React.FC<ProductPageProps> = ({
           {/* Main Image */}
           <div className={`aspect-square ${styles.cardBg} border ${styles.border} p-4 flex items-center justify-center`}>
             <img
-              src={product.images[selectedImageIndex]}
+              src={productImages[selectedImageIndex]}
               alt={product.name}
               className="max-w-full max-h-full object-contain"
             />
           </div>
 
           {/* Thumbnail Gallery */}
-          {product.images.length > 1 && (
+          {productImages.length > 1 && (
             <div className="flex gap-2">
-              {product.images.map((img, index) => (
+              {productImages.map((img, index) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImageIndex(index)}
@@ -153,70 +156,88 @@ const ProductPage: React.FC<ProductPageProps> = ({
           </div>
 
           {/* Description */}
-          <div className={`py-6 border-t border-b ${styles.border}`}>
-            <p className={`text-base leading-relaxed font-lhkk ${styles.text}`}>
-              {product.detailedHighlightText && product.detailedDescription.includes(product.detailedHighlightText) ? (
-                <>
-                  {product.detailedDescription.split(product.detailedHighlightText)[0]}
-                  <span className="product-highlight-text">{product.detailedHighlightText}</span>
-                  {product.detailedDescription.split(product.detailedHighlightText).slice(1).join(product.detailedHighlightText)}
-                </>
-              ) : (
-                product.detailedDescription
-              )}
-            </p>
-          </div>
+          {product.detailedDescription && (
+            <div className={`py-6 border-t border-b ${styles.border}`}>
+              <p className={`text-base leading-relaxed font-lhkk ${styles.text}`}>
+                {product.detailedHighlightText && product.detailedDescription.includes(product.detailedHighlightText) ? (
+                  <>
+                    {product.detailedDescription.split(product.detailedHighlightText)[0]}
+                    <span className="product-highlight-text">{product.detailedHighlightText}</span>
+                    {product.detailedDescription.split(product.detailedHighlightText).slice(1).join(product.detailedHighlightText)}
+                  </>
+                ) : (
+                  product.detailedDescription
+                )}
+              </p>
+            </div>
+          )}
 
           {/* Features */}
-          <div>
-            <h3
-              className={`text-sm font-bold mb-3 font-lhkk ${styles.text}`}
-            >
-              產品特色
-            </h3>
-            <ul className="space-y-2">
-              {product.features.map((feature, i) => (
-                <li key={i} className={`flex items-center gap-2 text-sm ${styles.textSub}`}>
-                  <span className={styles.accent}>✓</span>
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          </div>
+          {product.features && product.features.length > 0 && (
+            <div>
+              <h3
+                className={`text-sm font-bold mb-3 font-lhkk ${styles.text}`}
+              >
+                產品特色
+              </h3>
+              <ul className="space-y-2">
+                {product.features.map((feature, i) => (
+                  <li key={i} className={`flex items-center gap-2 text-sm ${styles.textSub}`}>
+                    <span className={styles.accent}>✓</span>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* Pickup Methods */}
-          <div className={`${styles.cardBg} border ${styles.border} p-4`}>
-            <h3
-              className={`text-sm font-bold mb-3 font-lhkk ${styles.text}`}
-            >
-              取貨方式
-            </h3>
-            {product.pickupMethods.map(method => (
-              <div key={method.id} className="flex items-start gap-3">
-                <span className="text-2xl">{method.icon}</span>
-                <div>
-                  <p className={`font-medium ${styles.text}`}>{method.name}</p>
-                  <p className={`text-sm ${styles.textSub}`}>{method.description}</p>
+          {product.pickupMethods && product.pickupMethods.length > 0 && (
+            <div className={`${styles.cardBg} border ${styles.border} p-4`}>
+              <h3
+                className={`text-sm font-bold mb-3 font-lhkk ${styles.text}`}
+              >
+                取貨方式
+              </h3>
+              {product.pickupMethods.map(method => (
+                <div key={method.id} className="flex items-start gap-3">
+                  <span className="text-2xl">{method.icon}</span>
+                  <div>
+                    <p className={`font-medium ${styles.text}`}>{method.name}</p>
+                    <p className={`text-sm ${styles.textSub}`}>{method.description}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           {/* Redemption Info */}
-          <div className={`text-sm ${styles.textSub} space-y-2`}>
-            <p><strong className={styles.text}>換領期：</strong>{product.redemptionPeriod}</p>
-            <p><strong className={styles.text}>換領地點：</strong></p>
-            <ul className="list-disc list-inside pl-2">
-              {product.redemptionLocations.map((loc, i) => (
-                <li key={i}>{loc}</li>
-              ))}
-            </ul>
-            <p><strong className={styles.text}>重量：</strong>{product.weight}</p>
-            {product.dimensions && (
-              <p><strong className={styles.text}>尺寸：</strong>{product.dimensions}</p>
-            )}
-            <p><strong className={styles.text}>產地：</strong>{product.madeIn}</p>
-          </div>
+          {(product.redemptionPeriod || product.redemptionLocations || product.weight || product.madeIn) && (
+            <div className={`text-sm ${styles.textSub} space-y-2`}>
+              {product.redemptionPeriod && (
+                <p><strong className={styles.text}>換領期：</strong>{product.redemptionPeriod}</p>
+              )}
+              {product.redemptionLocations && product.redemptionLocations.length > 0 && (
+                <>
+                  <p><strong className={styles.text}>換領地點：</strong></p>
+                  <ul className="list-disc list-inside pl-2">
+                    {product.redemptionLocations.map((loc, i) => (
+                      <li key={i}>{loc}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              {product.weight && (
+                <p><strong className={styles.text}>重量：</strong>{product.weight}</p>
+              )}
+              {product.dimensions && (
+                <p><strong className={styles.text}>尺寸：</strong>{product.dimensions}</p>
+              )}
+              {product.madeIn && (
+                <p><strong className={styles.text}>產地：</strong>{product.madeIn}</p>
+              )}
+            </div>
+          )}
 
           {/* Quantity & Add to Cart */}
           <div className="flex flex-col sm:flex-row gap-4">

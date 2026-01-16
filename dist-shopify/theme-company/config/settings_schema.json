@@ -8,7 +8,7 @@
     "theme_support_url": "https://github.com/happy-printing/support"
   },
   {
-    "name": "通用設定",
+    "name": "品牌設定",
     "settings": [
       {
         "type": "image_picker",
@@ -19,6 +19,196 @@
         "type": "image_picker",
         "id": "logo",
         "label": "Logo 圖片"
+      },
+      {
+        "type": "text",
+        "id": "brand_name",
+        "label": "品牌名稱",
+        "default": "快樂印刷"
+      },
+      {
+        "type": "text",
+        "id": "brand_tagline",
+        "label": "品牌標語",
+        "default": "歲月滋味 傳承經典"
+      }
+    ]
+  },
+  {
+    "name": "顏色設定",
+    "settings": [
+      {
+        "type": "header",
+        "content": "主要顏色"
+      },
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "主色調 (紅色)",
+        "default": "#C83F49",
+        "info": "用於標題、按鈕、重點元素"
+      },
+      {
+        "type": "color",
+        "id": "color_secondary",
+        "label": "副色調 (金色)",
+        "default": "#B08D57",
+        "info": "用於裝飾線、輔助文字"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "背景顏色",
+        "default": "#F9F9F9"
+      },
+      {
+        "type": "header",
+        "content": "文字顏色"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "正文文字顏色",
+        "default": "#333333"
+      },
+      {
+        "type": "color",
+        "id": "color_text_light",
+        "label": "淺色文字顏色",
+        "default": "#666666"
+      }
+    ]
+  },
+  {
+    "name": "字體設定",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "font_heading",
+        "label": "標題字體",
+        "default": "work_sans_n6"
+      },
+      {
+        "type": "font_picker",
+        "id": "font_body",
+        "label": "正文字體",
+        "default": "work_sans_n4"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_lhkk_font",
+        "label": "使用李漢港楷字體",
+        "default": true,
+        "info": "啟用傳統香港字體風格"
+      }
+    ]
+  },
+  {
+    "name": "佈局設定",
+    "settings": [
+      {
+        "type": "range",
+        "id": "page_width",
+        "label": "頁面最大寬度",
+        "min": 1000,
+        "max": 1600,
+        "step": 100,
+        "default": 1200,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "spacing_sections",
+        "label": "區塊間距",
+        "min": 20,
+        "max": 100,
+        "step": 10,
+        "default": 50,
+        "unit": "px"
+      }
+    ]
+  },
+  {
+    "name": "按鈕樣式",
+    "settings": [
+      {
+        "type": "range",
+        "id": "button_border_radius",
+        "label": "按鈕圓角",
+        "min": 0,
+        "max": 20,
+        "step": 2,
+        "default": 0,
+        "unit": "px"
+      },
+      {
+        "type": "select",
+        "id": "button_style",
+        "label": "按鈕風格",
+        "options": [
+          {
+            "value": "solid",
+            "label": "實心"
+          },
+          {
+            "value": "outline",
+            "label": "描邊"
+          }
+        ],
+        "default": "solid"
+      }
+    ]
+  },
+  {
+    "name": "社交媒體",
+    "settings": [
+      {
+        "type": "header",
+        "content": "社交媒體連結"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook",
+        "label": "Facebook"
+      },
+      {
+        "type": "text",
+        "id": "social_instagram",
+        "label": "Instagram"
+      },
+      {
+        "type": "text",
+        "id": "social_youtube",
+        "label": "YouTube"
+      },
+      {
+        "type": "text",
+        "id": "social_whatsapp",
+        "label": "WhatsApp"
+      }
+    ]
+  },
+  {
+    "name": "結帳設定",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "cart_drawer_enabled",
+        "label": "啟用購物車側欄",
+        "default": false,
+        "info": "在頁面側邊顯示購物車"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_vendor",
+        "label": "顯示供應商",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "show_quantity_selector",
+        "label": "顯示數量選擇器",
+        "default": true
       }
     ]
   }

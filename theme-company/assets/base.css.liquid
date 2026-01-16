@@ -1,0 +1,295 @@
+
+/* 自定義字體 - 龍蝦快樂 */
+@font-face {
+  font-family: 'LHKK';
+  src: url('{{ "LHKK7000v1.04.ttf" | asset_url }}') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ===== Accessibility Utilities ===== */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.visually-hidden:focus,
+.visually-hidden:focus-within {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 0.5rem 1rem !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  clip: auto !important;
+  white-space: normal !important;
+  background-color: var(--company-primary);
+  color: white;
+  z-index: 9999;
+}
+
+@keyframes flicker {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% { text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 40px #ff00de, 0 0 80px #ff00de, 0 0 90px #ff00de, 0 0 100px #ff00de, 0 0 150px #ff00de; }
+  20%, 24%, 55% { text-shadow: none; }
+}
+
+.neon-flicker {
+  animation: flicker 3s infinite alternate;
+}
+
+.writing-vertical {
+  writing-mode: vertical-rl;
+}
+
+.writing-vertical-rl {
+  writing-mode: vertical-rl;
+}
+
+.font-lhkk {
+  font-family: 'LHKK', 'Noto Serif TC', serif;
+}
+
+/* Monospace font fallback (Tailwind CDN backup) */
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+.wkw-gradient {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(20,0,0,0.4), rgba(0,20,20,0.6));
+}
+
+/* Marker Highlight Animation */
+.highlight-text,
+.card-highlight-text {
+  background: linear-gradient(120deg, rgba(176, 141, 87, 0.35) 0%, rgba(212, 175, 55, 0.35) 100%);
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  background-position: 0 88%;
+  transition: background-size 0.5s ease-out;
+  padding: 2px 4px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.group:hover .highlight-text,
+.group:hover .card-highlight-text {
+  background-size: 100% 40%;
+}
+
+.product-highlight-text {
+  background: linear-gradient(120deg, rgba(176, 141, 87, 0.35) 0%, rgba(212, 175, 55, 0.35) 100%);
+  background-repeat: no-repeat;
+  background-size: 100% 40%;
+  background-position: 0 88%;
+  padding: 2px 4px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* ===== Company Mode - 快樂印刷主題樣式 ===== */
+
+/* CSS Variables for Company Mode Colors */
+:root {
+  --company-primary: #C83F49;
+  --company-gold: #B08D57;
+  --company-bg: #F9F9F9;
+  --company-dark: #1a1a1a;
+}
+
+/* Marquee Animation for Company Mode */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+}
+
+.marquee-wrapper:hover .animate-marquee {
+  animation-play-state: paused;
+}
+
+/* Signboard Style */
+.signboard-container {
+  position: relative;
+}
+
+.signboard-text {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Ticket/Voucher Card Style */
+.ticket-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.ticket-card::before,
+.ticket-card::after {
+  content: '';
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  background-color: var(--company-bg);
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.ticket-card::before {
+  left: -0.5rem;
+}
+
+.ticket-card::after {
+  right: -0.5rem;
+}
+
+/* Stamp Effect */
+.stamp-effect {
+  position: relative;
+}
+
+.stamp-effect::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60px;
+  height: 60px;
+  background: var(--company-primary);
+  border-radius: 50%;
+  opacity: 0.15;
+  transform: rotate(-15deg);
+}
+
+/* Traditional Chinese Typography */
+.text-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.text-vertical-lr {
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+}
+
+/* Decorative Lines */
+.decorative-line {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--company-gold),
+    transparent
+  );
+}
+
+.decorative-line-vertical {
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--company-gold),
+    transparent
+  );
+}
+
+/* Button Styles */
+.btn-company-primary {
+  background-color: var(--company-primary);
+  color: white;
+  transition: all 0.3s ease-out;
+}
+
+.btn-company-primary:hover {
+  background-color: white;
+  color: var(--company-primary);
+  box-shadow: inset 0 0 0 2px var(--company-primary);
+}
+
+.btn-company-outline {
+  border: 2px solid var(--company-gold);
+  color: var(--company-gold);
+  background: transparent;
+  transition: all 0.3s ease-out;
+}
+
+.btn-company-outline:hover {
+  background-color: var(--company-gold);
+  color: white;
+}
+
+/* Form Elements */
+.input-company {
+  border: 2px solid var(--company-primary);
+  background: white;
+  padding: 0.75rem 1rem;
+  font-family: 'LHKK', 'Noto Serif TC', serif;
+}
+
+.input-company:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(200, 63, 73, 0.2);
+}
+
+/* Scrollbar Styling */
+.company-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.company-scrollbar::-webkit-scrollbar-track {
+  background: var(--company-bg);
+}
+
+.company-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--company-gold);
+  border-radius: 4px;
+}
+
+.company-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--company-primary);
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  .text-responsive-hero {
+    font-size: 2.5rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .text-responsive-hero {
+    font-size: 4rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .text-responsive-hero {
+    font-size: 5rem;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .print-break-before {
+    page-break-before: always;
+  }
+}

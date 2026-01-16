@@ -1,0 +1,45 @@
+{% layout 'gift_card' %}
+{% comment %}
+  快樂印刷 - Gift Card Template
+{% endcomment %}
+
+<div id="MainContent" class="main-content">
+  <div class="gift-card-wrapper">
+    <header class="gift-card-header">
+      <h1>{{ shop.name }}</h1>
+      {% if gift_card.balance > 0 %}
+        <p>{{ 'gift_cards.issued.subtext' | t }}</p>
+      {% endif %}
+    </header>
+
+    <main class="gift-card-main">
+      <div class="gift-card-holder">
+        <div class="gift-card">
+          <img src="{{ 'gift-card/card.jpg' | shopify_asset_url }}" alt="Gift card" width="600" height="400" loading="lazy">
+          {% if gift_card.balance > 0 %}
+            <div class="gift-card-code">
+              <p>{{ gift_card.code | format_code }}</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if gift_card.balance > 0 %}
+        <p class="gift-card-instructions">
+          {{ 'gift_cards.issued.redeem' | t }}
+        </p>
+        <p class="gift-card-balance">
+          {{ gift_card.balance | money }}
+        </p>
+      {% else %}
+        <p class="gift-card-spent">
+          {{ 'gift_cards.issued.spent' | t }}
+        </p>
+      {% endif %}
+
+      <a href="{{ shop.url }}" class="button">
+        {{ 'gift_cards.issued.shop_link' | t }}
+      </a>
+    </main>
+  </div>
+</div>

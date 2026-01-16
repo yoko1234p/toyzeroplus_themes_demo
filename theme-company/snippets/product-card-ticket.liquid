@@ -1,0 +1,91 @@
+{%- comment -%}
+  Product Card - Voucher Style (對齊 React CardItem)
+  Company Mode 票券風格產品卡
+
+  Usage:
+  {% render 'product-card-ticket', product: product, primary_color: '#C83F49', gold_color: '#B08D57' %}
+{%- endcomment -%}
+
+{%- liquid
+  assign primary_color = primary_color | default: settings.color_primary | default: '#C83F49'
+  assign gold_color = gold_color | default: settings.color_secondary | default: '#B08D57'
+  assign bg_color = bg_color | default: settings.color_background | default: '#f4f4f0'
+-%}
+
+{%- comment -%} Outer Container - 外邊框 hover 變金色 {%- endcomment -%}
+<div class="product-card-ticket relative bg-white border-2 overflow-visible transition-colors duration-500 group-hover:border-[#B08D57]" style="border-color: #EAEAEA;">
+
+  {%- comment -%} Category Tag - 垂直標籤右上角 (對齊 React) {%- endcomment -%}
+  <div class="absolute -top-2 -right-2 text-white text-[10px] py-1 px-2 font-lhkk tracking-widest z-20 shadow-md" style="background-color: {{ primary_color }}; writing-mode: vertical-rl; height: 4rem;">
+    {{ product.type | default: '糕點' }}
+  </div>
+
+  {%- comment -%} Inner Container - 雙層邊框效果 (對齊 React m-2 p-4 border) {%- endcomment -%}
+  <div class="m-2 p-4 border border-[#333]/10 flex flex-col relative overflow-hidden" style="min-height: 420px;">
+
+    {%- comment -%} Cutout Circles - Voucher effect (對齊 React 位置) {%- endcomment -%}
+    <div class="absolute top-1/2 -left-4 w-6 h-6 rounded-full border" style="background-color: {{ bg_color }}; border-color: #EAEAEA;"></div>
+    <div class="absolute top-1/2 -right-4 w-6 h-6 rounded-full border" style="background-color: {{ bg_color }}; border-color: #EAEAEA;"></div>
+
+    {%- comment -%} Image Area - 對齊 React gradient background {%- endcomment -%}
+    <div class="w-full aspect-square mb-4 overflow-hidden flex items-center justify-center relative" style="background: linear-gradient(to bottom, #f5f5f0, #e8e6dc);">
+      {%- if product.featured_image -%}
+        <img
+          src="{{ product.featured_image | image_url: width: 600 }}"
+          alt="{{ product.featured_image.alt | default: product.title }}"
+          width="600"
+          height="600"
+          loading="lazy"
+          class="w-full h-full object-contain transition-transform duration-1000 group-hover:scale-110"
+        >
+      {%- else -%}
+        <span class="font-lhkk text-6xl" style="color: {{ gold_color }};">糕</span>
+      {%- endif -%}
+      <!-- Gold overlay on hover -->
+      <div class="absolute inset-0 bg-[#B08D57] opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none"></div>
+    </div>
+
+    {%- comment -%} Content Area - 文字居中 (對齊 React) {%- endcomment -%}
+    <div class="text-center mt-auto flex-grow flex flex-col">
+      {%- comment -%} Product Title {%- endcomment -%}
+      <h3 class="text-xl font-lhkk font-black mb-1" style="color: #333;">
+        {{ product.title }}
+      </h3>
+
+      {%- comment -%} English Name with mono font (對齊 React font-mono tracking-[0.2em]) {%- endcomment -%}
+      <p class="text-[10px] tracking-[0.2em] uppercase mb-3 font-mono" style="color: {{ gold_color }};">
+        {%- if product.metafields.custom.english_name != blank -%}
+          {{ product.metafields.custom.english_name }}
+        {%- else -%}
+          {{ product.title | handleize | replace: '-', ' ' | upcase }}
+        {%- endif -%}
+      </p>
+
+      {%- comment -%} Divider Line (對齊 React w-8 h-px) {%- endcomment -%}
+      <div class="w-8 h-px mx-auto mb-3" style="background-color: rgba(51, 51, 51, 0.2);"></div>
+
+      {%- comment -%} Description with card-highlight-text hover effect (對齊 React) {%- endcomment -%}
+      <p class="text-sm leading-relaxed font-lhkk mb-4 line-clamp-2 flex-grow" style="color: rgba(51, 51, 51, 0.8);">
+        {%- assign desc = product.description | strip_html | truncatewords: 15 -%}
+        {%- if product.metafields.custom.highlight_text != blank -%}
+          {%- assign highlight = product.metafields.custom.highlight_text -%}
+          {%- assign parts = desc | split: highlight -%}
+          {{ parts[0] }}<span class="card-highlight-text">{{ highlight }}</span>{{ parts | slice: 1, parts.size | join: highlight }}
+        {%- else -%}
+          {{ desc }}
+        {%- endif -%}
+      </p>
+    </div>
+
+    {%- comment -%} Price / Action - 對齊 React {%- endcomment -%}
+    <div class="mt-4 pt-4 border-t border-dashed flex justify-between items-center" style="border-color: rgba(51, 51, 51, 0.2);">
+      {%- comment -%} Price with font-mono (對齊 React) {%- endcomment -%}
+      <span class="font-mono text-lg font-bold" style="color: #333;">{{ product.price | money }}</span>
+
+      {%- comment -%} 立即訂購 Button with underline (對齊 React) {%- endcomment -%}
+      <span class="text-xs font-bold border-b pb-0.5 font-lhkk transition-colors hover:text-[#B08D57] hover:border-[#B08D57]" style="color: {{ primary_color }}; border-color: {{ primary_color }};">
+        立即訂購
+      </span>
+    </div>
+  </div>
+</div>

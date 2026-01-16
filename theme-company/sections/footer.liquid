@@ -1,0 +1,55 @@
+{%- comment -%}
+  Company Mode - Footer Section
+  快樂印刷頁尾 - 極簡單行設計
+  精確匹配 React 設計
+{%- endcomment -%}
+
+{%- liquid
+  assign primary_color = settings.color_primary | default: '#C83F49'
+-%}
+
+<footer class="py-16 md:py-32 px-4 md:px-10 border-t relative z-20 transition-colors duration-500" style="border-color: black; background-color: #f4f4f0;">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 md:gap-10 text-[9px] tracking-[0.4em] font-black uppercase font-lhkk text-zinc-600">
+
+    {%- comment -%} Left Side - Copyright & Company Name {%- endcomment -%}
+    <div class="flex items-center gap-4 md:gap-8">
+      <span>© {{ section.settings.year_range | default: '1960-2046' }}</span>
+      <span class="w-6 md:w-8 h-[1px] bg-black"></span>
+      <span>{{ section.settings.company_name | default: '快樂活版印刷公司' }}</span>
+    </div>
+
+    {%- comment -%} Right Side - Tagline {%- endcomment -%}
+    <div class="tracking-[0.6em] md:tracking-[0.8em]" style="color: {{ primary_color }};">
+      {{ section.settings.tagline | default: '專為傷心人排版' }}
+    </div>
+
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "tag": "div",
+  "class": "footer-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "year_range",
+      "label": "年份範圍",
+      "default": "1960-2046"
+    },
+    {
+      "type": "text",
+      "id": "company_name",
+      "label": "公司名稱",
+      "default": "快樂活版印刷公司"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "標語",
+      "default": "專為傷心人排版"
+    }
+  ]
+}
+{% endschema %}

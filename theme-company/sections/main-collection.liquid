@@ -1,0 +1,208 @@
+{%- comment -%}
+  Company Mode - Collection Page
+  快樂印刷系列頁
+{%- endcomment -%}
+
+{%- liquid
+  assign primary_color = settings.color_primary | default: '#C83F49'
+  assign gold_color = settings.color_secondary | default: '#B08D57'
+  assign bg_color = settings.color_background | default: '#F9F9F9'
+-%}
+
+<div class="collection-page min-h-screen py-8 md:py-16" style="background-color: {{ bg_color }};">
+  <div class="max-w-7xl mx-auto px-4 md:px-8">
+
+    {%- comment -%} Collection Header {%- endcomment -%}
+    <header class="text-center mb-12 md:mb-16">
+      {%- comment -%} Breadcrumb {%- endcomment -%}
+      <nav class="mb-8" aria-label="breadcrumb">
+        <ol class="flex items-center justify-center gap-2 text-sm">
+          <li>
+            <a href="{{ routes.root_url }}" class="hover:opacity-70 transition-opacity" style="color: {{ gold_color }};">
+              首頁
+            </a>
+          </li>
+          <li style="color: {{ gold_color }};">/</li>
+          <li class="font-lhkk" style="color: {{ primary_color }};">{{ collection.title }}</li>
+        </ol>
+      </nav>
+
+      {%- comment -%} Collection Title {%- endcomment -%}
+      <h1 class="font-lhkk text-4xl md:text-5xl lg:text-6xl font-bold mb-4" style="color: {{ primary_color }};">
+        {{ collection.title }}
+      </h1>
+
+      {%- comment -%} Decorative Line {%- endcomment -%}
+      <div class="w-24 h-px mx-auto mb-6" style="background-color: {{ gold_color }};"></div>
+
+      {%- comment -%} Collection Description {%- endcomment -%}
+      {%- if collection.description != blank -%}
+        <p class="text-gray-600 max-w-2xl mx-auto">
+          {{ collection.description }}
+        </p>
+      {%- endif -%}
+
+      {%- comment -%} Product Count {%- endcomment -%}
+      <p class="mt-4 text-sm" style="color: {{ gold_color }};">
+        共 {{ collection.products_count }} 件產品
+      </p>
+    </header>
+
+    {%- comment -%} Filters & Sort (Optional) {%- endcomment -%}
+    {%- if section.settings.show_sort -%}
+      <div class="flex justify-end mb-8">
+        <div class="relative">
+          <select
+            id="SortBy"
+            class="appearance-none px-4 py-2 pr-10 border-2 font-lhkk text-sm focus:outline-none cursor-pointer"
+            style="border-color: {{ gold_color }}; color: {{ gold_color }};"
+            onchange="window.location.href = this.value"
+          >
+            <option value="{{ collection.url }}?sort_by=manual" {% if collection.sort_by == 'manual' %}selected{% endif %}>
+              精選
+            </option>
+            <option value="{{ collection.url }}?sort_by=best-selling" {% if collection.sort_by == 'best-selling' %}selected{% endif %}>
+              最暢銷
+            </option>
+            <option value="{{ collection.url }}?sort_by=price-ascending" {% if collection.sort_by == 'price-ascending' %}selected{% endif %}>
+              價格：低至高
+            </option>
+            <option value="{{ collection.url }}?sort_by=price-descending" {% if collection.sort_by == 'price-descending' %}selected{% endif %}>
+              價格：高至低
+            </option>
+            <option value="{{ collection.url }}?sort_by=created-descending" {% if collection.sort_by == 'created-descending' %}selected{% endif %}>
+              最新
+            </option>
+          </select>
+          <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="{{ gold_color }}" stroke-width="2">
+              <path d="M3 4.5L6 7.5L9 4.5"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Products Grid {%- endcomment -%}
+    {%- if collection.products.size > 0 -%}
+      {%- paginate collection.products by section.settings.products_per_page -%}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-{{ section.settings.columns }} gap-6 md:gap-8">
+          {%- for product in collection.products -%}
+            <a href="{{ product.url }}" class="group block">
+              {%- render 'product-card-ticket', product: product, primary_color: primary_color, gold_color: gold_color -%}
+            </a>
+          {%- endfor -%}
+        </div>
+
+        {%- comment -%} Pagination {%- endcomment -%}
+        {%- if paginate.pages > 1 -%}
+          <nav class="mt-16 flex justify-center" aria-label="pagination">
+            <div class="flex items-center gap-2">
+              {%- if paginate.previous -%}
+                <a
+                  href="{{ paginate.previous.url }}"
+                  class="px-4 py-2 border-2 font-lhkk text-sm transition-colors hover:text-white"
+                  style="border-color: {{ primary_color }}; color: {{ primary_color }};"
+                  onmouseover="this.style.backgroundColor='{{ primary_color }}'"
+                  onmouseout="this.style.backgroundColor='transparent'"
+                >
+                  上一頁
+                </a>
+              {%- endif -%}
+
+              {%- for part in paginate.parts -%}
+                {%- if part.is_link -%}
+                  <a
+                    href="{{ part.url }}"
+                    class="w-10 h-10 flex items-center justify-center border-2 font-lhkk text-sm transition-colors hover:text-white"
+                    style="border-color: {{ gold_color }}; color: {{ gold_color }};"
+                    onmouseover="this.style.backgroundColor='{{ gold_color }}'"
+                    onmouseout="this.style.backgroundColor='transparent'"
+                  >
+                    {{ part.title }}
+                  </a>
+                {%- else -%}
+                  {%- if part.title == paginate.current_page -%}
+                    <span
+                      class="w-10 h-10 flex items-center justify-center font-lhkk text-sm text-white"
+                      style="background-color: {{ primary_color }};"
+                    >
+                      {{ part.title }}
+                    </span>
+                  {%- else -%}
+                    <span class="w-10 h-10 flex items-center justify-center text-gray-400">
+                      {{ part.title }}
+                    </span>
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endfor -%}
+
+              {%- if paginate.next -%}
+                <a
+                  href="{{ paginate.next.url }}"
+                  class="px-4 py-2 border-2 font-lhkk text-sm transition-colors hover:text-white"
+                  style="border-color: {{ primary_color }}; color: {{ primary_color }};"
+                  onmouseover="this.style.backgroundColor='{{ primary_color }}'"
+                  onmouseout="this.style.backgroundColor='transparent'"
+                >
+                  下一頁
+                </a>
+              {%- endif -%}
+            </div>
+          </nav>
+        {%- endif -%}
+      {%- endpaginate -%}
+    {%- else -%}
+      {%- comment -%} Empty Collection {%- endcomment -%}
+      <div class="text-center py-16">
+        <span class="font-lhkk text-6xl block mb-4" style="color: {{ gold_color }};">糕</span>
+        <p class="font-lhkk text-xl" style="color: {{ primary_color }};">
+          此系列暫無產品
+        </p>
+        <a
+          href="{{ routes.all_products_collection_url }}"
+          class="inline-block mt-6 px-6 py-3 border-2 font-lhkk transition-colors hover:text-white"
+          style="border-color: {{ primary_color }}; color: {{ primary_color }};"
+          onmouseover="this.style.backgroundColor='{{ primary_color }}'"
+          onmouseout="this.style.backgroundColor='transparent'"
+        >
+          瀏覽全部產品
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "系列頁",
+  "tag": "section",
+  "class": "main-collection-section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "每頁產品數量",
+      "min": 6,
+      "max": 24,
+      "step": 3,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "每行欄數 (桌面版)",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort",
+      "label": "顯示排序選項",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

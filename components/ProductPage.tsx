@@ -34,7 +34,8 @@ const ProductPage: React.FC<ProductPageProps> = ({
   const [showCartAnimation, setShowCartAnimation] = useState(false);
 
   // 處理加入購物車
-  const handleAddToCartClick = () => {
+  const handleAddToCartClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     onAddToCart?.(product);
     setShowCartAnimation(true);
   };
@@ -114,6 +115,7 @@ const ProductPage: React.FC<ProductPageProps> = ({
         accent: 'text-red-600',
         button: 'bg-red-800 hover:bg-red-700 text-white',
         buttonOutline: 'border-red-800 text-red-600 hover:bg-red-800 hover:text-white',
+        hover: 'hover:bg-zinc-800',
       };
     }
     if (isSeal) {
@@ -126,6 +128,7 @@ const ProductPage: React.FC<ProductPageProps> = ({
         accent: 'text-[#C83F49]',
         button: 'bg-[#C83F49] hover:bg-[#B03A42] text-white',
         buttonOutline: 'border-[#C83F49] text-[#C83F49] hover:bg-[#C83F49] hover:text-white',
+        hover: 'hover:bg-[#F0F0F0]',
       };
     }
     return {
@@ -137,6 +140,7 @@ const ProductPage: React.FC<ProductPageProps> = ({
       accent: 'text-red-700',
       button: 'bg-red-700 hover:bg-red-800 text-white',
       buttonOutline: 'border-red-700 text-red-700 hover:bg-red-700 hover:text-white',
+      hover: 'hover:bg-zinc-100',
     };
   };
 
@@ -318,24 +322,27 @@ const ProductPage: React.FC<ProductPageProps> = ({
 
           {/* Quantity & Add to Cart */}
           <div className="flex flex-col sm:flex-row gap-4">
+            {/* Quantity Selector */}
             <div className={`flex items-center border ${styles.border}`}>
               <button
                 onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                className={`px-4 py-3 ${styles.textSub} hover:${styles.text}`}
+                className={`w-10 h-10 flex items-center justify-center ${styles.hover}`}
               >
-                -
+                <span className="text-lg">−</span>
               </button>
-              <span className={`px-6 py-3 ${styles.text} font-medium`}>{quantity}</span>
+              <span className={`w-12 text-center font-mono ${styles.text}`}>{quantity}</span>
               <button
                 onClick={() => setQuantity(q => q + 1)}
-                className={`px-4 py-3 ${styles.textSub} hover:${styles.text}`}
+                className={`w-10 h-10 flex items-center justify-center ${styles.hover}`}
               >
-                +
+                <span className="text-lg">+</span>
               </button>
             </div>
+
+            {/* Add to Cart Button - 確保無條件顯示 */}
             <button
               onClick={handleAddToCartClick}
-              className={`flex-1 py-3 px-8 font-bold tracking-widest text-sm transition-colors font-lhkk ${styles.button}`}
+              className={`flex-1 py-3 px-8 font-bold tracking-wider transition-all duration-300 ${styles.button}`}
             >
               加入購物車
             </button>

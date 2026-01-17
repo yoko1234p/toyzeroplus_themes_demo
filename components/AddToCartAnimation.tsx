@@ -20,16 +20,18 @@ const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
         setPosition(startPosition);
       }
 
-      const timer = setTimeout(onComplete, 800);
+      const timer = setTimeout(onComplete, 700);
       return () => clearTimeout(timer);
     }
   }, [show, onComplete, startPosition]);
 
   if (!show) return null;
 
-  // 購物車圖標位置（右上角）
+  // 購物車按鈕位置（右下角 fixed bottom-6 right-6, w-14 h-14）
+  // bottom-6 = 24px, right-6 = 24px, 按鈕大小 = 56px
+  // 中心點: x = innerWidth - 24 - 28, y = innerHeight - 24 - 28
   const cartPosition = typeof window !== 'undefined'
-    ? { x: window.innerWidth - 40, y: 28 }
+    ? { x: window.innerWidth - 52, y: window.innerHeight - 52 }
     : { x: 0, y: 0 };
 
   return (
@@ -48,26 +50,36 @@ const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
           0% {
             left: var(--start-x);
             top: var(--start-y);
-            transform: scale(1);
+            transform: scale(1) translateY(0);
+            opacity: 1;
+          }
+          25% {
+            transform: scale(1.3) translateY(-30px);
             opacity: 1;
           }
           50% {
-            transform: scale(1.5);
+            transform: scale(1.1) translateY(-15px);
             opacity: 1;
           }
-          80% {
-            transform: scale(0.8);
+          75% {
+            transform: scale(0.9);
+            opacity: 1;
+          }
+          90% {
+            left: var(--end-x);
+            top: var(--end-y);
+            transform: scale(1.2);
             opacity: 1;
           }
           100% {
             left: var(--end-x);
             top: var(--end-y);
-            transform: scale(0.3);
+            transform: scale(0);
             opacity: 0;
           }
         }
         .animate-fly-to-cart {
-          animation: fly-to-cart 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+          animation: fly-to-cart 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
         }
       `}</style>
     </div>

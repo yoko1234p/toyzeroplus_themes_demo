@@ -49,7 +49,8 @@ export const PRODUCTS_QUERY = `
             { namespace: "custom", key: "main_ingredients" },
             { namespace: "custom", key: "redemption_period" },
             { namespace: "custom", key: "redemption_locations" },
-            { namespace: "custom", key: "made_in" }
+            { namespace: "custom", key: "made_in" },
+            { namespace: "custom", key: "hppye_tag" }
           ]) {
             namespace
             key

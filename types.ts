@@ -8,9 +8,9 @@ export interface PickupMethod {
 export interface Product {
   id: string;
   name: string;
-  price: number;           // 數字價格
-  originalPrice?: number;  // 原價 (compareAtPrice)
-  formattedPrice: string;  // 格式化價格顯示
+  price: number; // 數字價格
+  originalPrice?: number; // 原價 (compareAtPrice)
+  formattedPrice: string; // 格式化價格顯示
   formattedOriginalPrice?: string;
   currency: string;
   category: string;
@@ -27,11 +27,12 @@ export interface Product {
   redemptionPeriod?: string;
   redemptionLocations?: string[];
   madeIn?: string;
+  tag?: string; // From custom.hppye_tag metafield
 }
 
 export enum LayoutMode {
-  BRUTALIST = 'BRUTALIST',
-  CINEMATIC = 'CINEMATIC'
+  BRUTALIST = "BRUTALIST",
+  CINEMATIC = "CINEMATIC",
 }
 
-export type ThemeMode = 'dark' | 'light' | 'card' | 'seal' | 'company';
+export type ThemeMode = "dark" | "light" | "card" | "seal" | "company";

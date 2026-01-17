@@ -341,20 +341,25 @@ const ProductPage: React.FC<ProductPageProps> = ({
 
           {/* Quantity & Add to Cart */}
           <div className="flex flex-col sm:flex-row gap-4">
-            {/* Quantity Selector */}
-            <div className={`flex items-center border ${styles.border}`}>
+            {/* Quantity Selector - 優化版 */}
+            <div className={`flex items-center border-2 ${styles.border} rounded-lg overflow-hidden`}>
               <button
                 onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                className={`w-10 h-10 flex items-center justify-center ${styles.hover}`}
+                disabled={quantity <= 1}
+                className={`w-12 h-12 flex items-center justify-center ${styles.hover} transition-all duration-200 ${quantity <= 1 ? 'opacity-40 cursor-not-allowed' : 'active:scale-90'}`}
               >
-                <span className="text-lg">−</span>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                </svg>
               </button>
-              <span className={`w-12 text-center font-mono ${styles.text}`}>{quantity}</span>
+              <span className={`w-14 text-center font-mono text-lg font-bold ${styles.text} select-none`}>{quantity}</span>
               <button
                 onClick={() => setQuantity(q => q + 1)}
-                className={`w-10 h-10 flex items-center justify-center ${styles.hover}`}
+                className={`w-12 h-12 flex items-center justify-center ${styles.hover} transition-all duration-200 active:scale-90`}
               >
-                <span className="text-lg">+</span>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
               </button>
             </div>
 

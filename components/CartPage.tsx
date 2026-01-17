@@ -35,8 +35,10 @@ const CartPage: React.FC<CartPageProps> = ({
         cardBg: 'bg-zinc-900',
         text: 'text-zinc-200',
         textSub: 'text-zinc-400',
+        textSubHover: 'hover:text-zinc-200',
         border: 'border-zinc-800',
         accent: 'text-red-600',
+        accentHover: 'hover:text-red-600',
         button: 'bg-red-800 hover:bg-red-700 text-white',
         buttonOutline: 'border-red-800 text-red-600 hover:bg-red-800 hover:text-white',
         hover: 'hover:bg-zinc-800',
@@ -48,8 +50,10 @@ const CartPage: React.FC<CartPageProps> = ({
         cardBg: 'bg-white',
         text: 'text-[#333333]',
         textSub: 'text-[#333333]/60',
+        textSubHover: 'hover:text-[#333333]',
         border: 'border-[#EAEAEA]',
         accent: 'text-[#C83F49]',
+        accentHover: 'hover:text-[#C83F49]',
         button: 'bg-[#C83F49] hover:bg-[#B03A42] text-white',
         buttonOutline: 'border-[#C83F49] text-[#C83F49] hover:bg-[#C83F49] hover:text-white',
         hover: 'hover:bg-[#F0F0F0]',
@@ -60,8 +64,10 @@ const CartPage: React.FC<CartPageProps> = ({
       cardBg: 'bg-white',
       text: 'text-black',
       textSub: 'text-zinc-600',
+      textSubHover: 'hover:text-black',
       border: 'border-zinc-300',
       accent: 'text-red-700',
+      accentHover: 'hover:text-red-700',
       button: 'bg-red-700 hover:bg-red-800 text-white',
       buttonOutline: 'border-red-700 text-red-700 hover:bg-red-700 hover:text-white',
       hover: 'hover:bg-zinc-100',
@@ -100,7 +106,7 @@ const CartPage: React.FC<CartPageProps> = ({
         {/* Back Button */}
         <button
           onClick={onBack}
-          className={`mb-8 flex items-center gap-2 text-sm font-lhkk ${styles.textSub} hover:${styles.text} transition-colors`}
+          className={`mb-8 flex items-center gap-2 text-sm font-lhkk ${styles.textSub} ${styles.textSubHover} transition-colors`}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -137,7 +143,7 @@ const CartPage: React.FC<CartPageProps> = ({
       {/* Back Button */}
       <button
         onClick={onBack}
-        className={`mb-8 flex items-center gap-2 text-sm font-lhkk ${styles.textSub} hover:${styles.text} transition-colors`}
+        className={`mb-8 flex items-center gap-2 text-sm font-lhkk ${styles.textSub} ${styles.textSubHover} transition-colors`}
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -200,7 +206,8 @@ const CartPage: React.FC<CartPageProps> = ({
                 <div className="flex flex-col items-end justify-between">
                   <button
                     onClick={() => onRemoveItem(item.id)}
-                    className={`p-1 ${styles.textSub} hover:${styles.accent} transition-colors`}
+                    disabled={loading}
+                    className={`p-1 ${styles.textSub} ${styles.accentHover} transition-colors ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     title="移除產品"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -211,7 +218,8 @@ const CartPage: React.FC<CartPageProps> = ({
                   <div className={`flex items-center border ${styles.border}`}>
                     <button
                       onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                      className={`w-8 h-8 flex items-center justify-center ${styles.hover} transition-colors`}
+                      disabled={loading}
+                      className={`w-8 h-8 flex items-center justify-center ${styles.hover} transition-colors ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
                       <span className="text-lg">-</span>
                     </button>
@@ -220,7 +228,8 @@ const CartPage: React.FC<CartPageProps> = ({
                     </span>
                     <button
                       onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                      className={`w-8 h-8 flex items-center justify-center ${styles.hover} transition-colors`}
+                      disabled={loading}
+                      className={`w-8 h-8 flex items-center justify-center ${styles.hover} transition-colors ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
                       <span className="text-lg">+</span>
                     </button>
@@ -243,7 +252,8 @@ const CartPage: React.FC<CartPageProps> = ({
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               onClick={onBack}
-              className={`flex-1 py-3 px-6 border font-bold tracking-wider transition-all duration-300 ${styles.buttonOutline}`}
+              disabled={loading}
+              className={`flex-1 py-3 px-6 border font-bold tracking-wider transition-all duration-300 ${styles.buttonOutline} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               繼續購物
             </button>
@@ -253,8 +263,8 @@ const CartPage: React.FC<CartPageProps> = ({
                   window.open(checkoutUrl, '_blank');
                 }
               }}
-              disabled={!checkoutUrl}
-              className={`flex-1 py-3 px-6 font-bold tracking-wider transition-all duration-300 ${styles.button} ${!checkoutUrl ? 'opacity-50 cursor-not-allowed' : ''}`}
+              disabled={!checkoutUrl || loading}
+              className={`flex-1 py-3 px-6 font-bold tracking-wider transition-all duration-300 ${styles.button} ${!checkoutUrl || loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               前往結帳
             </button>

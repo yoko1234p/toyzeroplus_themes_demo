@@ -348,8 +348,8 @@ const ProductPage: React.FC<ProductPageProps> = ({
                 disabled={quantity <= 1}
                 className={`w-12 h-12 flex items-center justify-center ${styles.hover} transition-all duration-200 ${quantity <= 1 ? 'opacity-40 cursor-not-allowed' : 'active:scale-90'}`}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                <svg className={`w-5 h-5 ${styles.text}`} fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M20 12H4" />
                 </svg>
               </button>
               <span className={`w-14 text-center font-mono text-lg font-bold ${styles.text} select-none`}>{quantity}</span>
@@ -357,8 +357,8 @@ const ProductPage: React.FC<ProductPageProps> = ({
                 onClick={() => setQuantity(q => q + 1)}
                 className={`w-12 h-12 flex items-center justify-center ${styles.hover} transition-all duration-200 active:scale-90`}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                <svg className={`w-5 h-5 ${styles.text}`} fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
               </button>
             </div>

@@ -4,7 +4,7 @@
  * 支援 Shopify Product interface 及 metafields 數據
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { MaximProduct, PRODUCTS } from '../data/products';
 import { Product, ThemeMode } from '../types';
 import AddToCartAnimation from './AddToCartAnimation';
@@ -27,8 +27,8 @@ const ProductPage: React.FC<ProductPageProps> = ({
   onProductClick,
   theme = 'seal'
 }) => {
-  // 取得其他產品（排除當前產品）
-  const relatedProducts = PRODUCTS.filter(p => p.id !== product.id);
+  // 取得其他產品（排除當前產品）- 使用 useMemo 優化性能
+  const relatedProducts = useMemo(() => PRODUCTS.filter(p => p.id !== product.id), [product.id]);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [showCartAnimation, setShowCartAnimation] = useState(false);
@@ -44,7 +44,9 @@ const ProductPage: React.FC<ProductPageProps> = ({
 
   // Scroll to top when product page opens or product changes
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+    }
     setSelectedImageIndex(0);
     setQuantity(1);
   }, [product.id]);

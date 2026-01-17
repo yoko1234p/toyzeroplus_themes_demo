@@ -95,9 +95,17 @@ const SealModeSections: React.FC<SealModeSectionsProps> = ({ onProductClick, sho
 
                             <div className="w-8 h-px bg-[#333]/20 mx-auto mb-4"></div>
 
-                            <p className="text-sm text-[#333]/80 leading-relaxed font-serif mb-6 line-clamp-2 h-12">
+                            <p className="text-sm text-[#333]/80 leading-relaxed font-serif mb-4 line-clamp-2 h-12">
                                 {renderHighlightedText(p.description || '', (p as any).highlightText)}
                             </p>
+
+                            {/* Metafield: Weight Display */}
+                            {(p as Product).weight && (
+                              <div className="flex items-center justify-center gap-1 text-xs text-[#B08D57] font-mono mb-2">
+                                <span className="opacity-60">重量</span>
+                                <span className="font-bold">{(p as Product).weight}</span>
+                              </div>
+                            )}
                         </div>
 
                         {/* Price / Action */}

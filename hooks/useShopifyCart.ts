@@ -1,12 +1,14 @@
 // hooks/useShopifyCart.ts
 import { useState, useEffect, useCallback } from 'react';
-import { getCart, addToCart, type ShopifyCart } from '../services/shopify';
+import { getCart, addToCart, updateCartLine, removeCartLine, getStoredCartId, type ShopifyCart } from '../services/shopify';
 
 interface UseShopifyCartResult {
   cart: ShopifyCart | null;
   loading: boolean;
   error: Error | null;
   addItem: (variantId: string, quantity?: number) => Promise<void>;
+  updateItem: (lineId: string, quantity: number) => Promise<void>;
+  removeItem: (lineId: string) => Promise<void>;
   checkoutUrl: string | null;
   itemCount: number;
   refreshCart: () => Promise<void>;
@@ -48,11 +50,53 @@ export function useShopifyCart(): UseShopifyCartResult {
     }
   }, []);
 
+  const updateItem = useCallback(async (lineId: string, quantity: number) => {
+    const cartId = getStoredCartId();
+    if (!cartId) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const updatedCart = await updateCartLine(cartId, lineId, quantity);
+      if (updatedCart) {
+        setCart(updatedCart);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to update item'));
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const removeItem = useCallback(async (lineId: string) => {
+    const cartId = getStoredCartId();
+    if (!cartId) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const updatedCart = await removeCartLine(cartId, lineId);
+      if (updatedCart) {
+        setCart(updatedCart);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to remove item'));
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return {
     cart,
     loading,
     error,
     addItem,
+    updateItem,
+    removeItem,
     checkoutUrl: cart?.checkoutUrl || null,
     itemCount: cart?.totalQuantity || 0,
     refreshCart,

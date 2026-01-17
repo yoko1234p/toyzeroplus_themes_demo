@@ -6,9 +6,10 @@ interface CartButtonProps {
   checkoutUrl: string | null;
   loading?: boolean;
   theme: ThemeMode;
+  onCartClick?: () => void;
 }
 
-const CartButton: React.FC<CartButtonProps> = ({ itemCount, checkoutUrl, loading, theme }) => {
+const CartButton: React.FC<CartButtonProps> = ({ itemCount, checkoutUrl, loading, theme, onCartClick }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const isDark = theme === 'dark';
@@ -42,7 +43,10 @@ const CartButton: React.FC<CartButtonProps> = ({ itemCount, checkoutUrl, loading
   };
 
   const handleClick = () => {
-    if (checkoutUrl) {
+    if (onCartClick) {
+      onCartClick();
+    } else if (checkoutUrl) {
+      // Fallback: 如果冇提供 onCartClick，直接開啟 checkout
       window.open(checkoutUrl, '_blank');
     }
   };

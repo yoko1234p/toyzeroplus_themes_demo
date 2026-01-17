@@ -1,6 +1,12 @@
 // services/shopify/cart.ts
 import { getShopifyClient } from './client';
-import { CART_CREATE_MUTATION, CART_LINES_ADD_MUTATION, CART_QUERY } from './queries';
+import {
+  CART_CREATE_MUTATION,
+  CART_LINES_ADD_MUTATION,
+  CART_QUERY,
+  CART_LINES_UPDATE_MUTATION,
+  CART_LINES_REMOVE_MUTATION,
+} from './queries';
 import type { ShopifyCart } from './types';
 
 const CART_ID_KEY = 'shopify_cart_id';
@@ -84,4 +90,51 @@ export async function getCart(): Promise<ShopifyCart | null> {
   }
 
   return data.cart;
+}
+
+export async function updateCartLine(
+  cartId: string,
+  lineId: string,
+  quantity: number
+): Promise<ShopifyCart | null> {
+  const client = getShopifyClient();
+
+  const { data, errors } = await client.request<{
+    cartLinesUpdate: { cart: ShopifyCart; userErrors: Array<{ field: string; message: string }> };
+  }>(CART_LINES_UPDATE_MUTATION, {
+    variables: {
+      cartId,
+      lines: [{ id: lineId, quantity }],
+    },
+  });
+
+  if (errors || data?.cartLinesUpdate?.userErrors?.length) {
+    console.error('Cart update errors:', errors || data?.cartLinesUpdate?.userErrors);
+    return null;
+  }
+
+  return data?.cartLinesUpdate?.cart || null;
+}
+
+export async function removeCartLine(
+  cartId: string,
+  lineId: string
+): Promise<ShopifyCart | null> {
+  const client = getShopifyClient();
+
+  const { data, errors } = await client.request<{
+    cartLinesRemove: { cart: ShopifyCart; userErrors: Array<{ field: string; message: string }> };
+  }>(CART_LINES_REMOVE_MUTATION, {
+    variables: {
+      cartId,
+      lineIds: [lineId],
+    },
+  });
+
+  if (errors || data?.cartLinesRemove?.userErrors?.length) {
+    console.error('Cart remove errors:', errors || data?.cartLinesRemove?.userErrors);
+    return null;
+  }
+
+  return data?.cartLinesRemove?.cart || null;
 }

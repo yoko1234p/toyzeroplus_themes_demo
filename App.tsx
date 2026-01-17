@@ -11,6 +11,7 @@ import Marquee from './components/Marquee';
 import OpeningAnimation from './components/OpeningAnimation';
 import CheckoutPage from './components/CheckoutPage';
 import ProductPage from './components/ProductPage';
+import CartPage from './components/CartPage';
 import FadeIn from './components/FadeIn';
 import ThemeToggle from './components/ThemeToggle';
 import CartButton from './components/CartButton';
@@ -31,7 +32,7 @@ const App: React.FC = () => {
     return shopifyTheme || 'card';
   };
 
-  const [view, setView] = useState<'intro' | 'leading' | 'checkout' | 'product'>('intro');
+  const [view, setView] = useState<'intro' | 'leading' | 'checkout' | 'product' | 'cart'>('intro');
   const [theme, setTheme] = useState<ThemeMode>(getInitialTheme());
 
   // Animation State for Light/Card modes
@@ -49,7 +50,7 @@ const App: React.FC = () => {
     count: 20,
     collectionHandle: 'happy-printing'
   });
-  const { cart, addItem, checkoutUrl, itemCount, loading: cartLoading } = useShopifyCart();
+  const { cart, addItem, updateItem, removeItem, checkoutUrl, itemCount, loading: cartLoading } = useShopifyCart();
 
   // Map Shopify products to local Product type
   const mappedShopifyProducts = shopifyProducts.length > 0 ? mapShopifyProducts(shopifyProducts) : [];
@@ -139,6 +140,11 @@ const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'auto' });
   };
 
+  const handleCartClick = () => {
+    setView('cart');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // 支援 Shopify Product 同 MaximProduct 兩種類型
   const handleMaximProductClick = (product: Product | MaximProduct) => {
     setSelectedMaximProduct(product);
@@ -224,6 +230,19 @@ const App: React.FC = () => {
 
   if (view === 'checkout') {
     return <CheckoutPage product={selectedProduct} onBack={handleBack} theme={theme} />;
+  }
+
+  if (view === 'cart') {
+    return (
+      <CartPage
+        cart={cart}
+        loading={cartLoading}
+        onBack={handleBack}
+        onUpdateItem={updateItem}
+        onRemoveItem={removeItem}
+        theme={theme}
+      />
+    );
   }
 
   if (view === 'product' && selectedMaximProduct) {
@@ -362,6 +381,7 @@ const App: React.FC = () => {
           checkoutUrl={checkoutUrl}
           loading={cartLoading}
           theme={theme}
+          onCartClick={handleCartClick}
         />
 
         <style>{`
@@ -467,6 +487,7 @@ const App: React.FC = () => {
           checkoutUrl={checkoutUrl}
           loading={cartLoading}
           theme={theme}
+          onCartClick={handleCartClick}
         />
       </div>
     );

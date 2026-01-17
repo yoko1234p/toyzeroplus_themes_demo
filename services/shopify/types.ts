@@ -60,6 +60,27 @@ export interface ShopifyProductsResponse {
   };
 }
 
+export interface ShopifyCartLineItem {
+  id: string;
+  quantity: number;
+  merchandise: {
+    id: string;
+    title: string;
+    price: {
+      amount: string;
+      currencyCode: string;
+    };
+    image?: {
+      url: string;
+      altText?: string | null;
+    };
+    product: {
+      title: string;
+      handle: string;
+    };
+  };
+}
+
 export interface ShopifyCart {
   id: string;
   checkoutUrl: string;
@@ -72,17 +93,7 @@ export interface ShopifyCart {
   };
   lines: {
     edges: Array<{
-      node: {
-        id: string;
-        quantity: number;
-        merchandise: {
-          id: string;
-          title: string;
-          product: {
-            title: string;
-          };
-        };
-      };
+      node: ShopifyCartLineItem;
     }>;
   };
 }

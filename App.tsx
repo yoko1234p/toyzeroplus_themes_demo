@@ -665,6 +665,7 @@ const App: React.FC = () => {
         checkoutUrl={checkoutUrl}
         loading={cartLoading}
         theme={theme}
+        onCartClick={handleCartClick}
       />
     </div>
   );

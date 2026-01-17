@@ -8,6 +8,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { MaximProduct, PRODUCTS } from '../data/products';
 import { Product, ThemeMode } from '../types';
 import AddToCartAnimation from './AddToCartAnimation';
+import CartButton from './CartButton';
 
 // 聯合類型支援兩種 product interface
 type ProductType = Product | MaximProduct;
@@ -15,9 +16,14 @@ type ProductType = Product | MaximProduct;
 interface ProductPageProps {
   product: ProductType;
   onBack: () => void;
-  onAddToCart?: (product: ProductType) => void;
+  onAddToCart?: (product: ProductType, quantity: number) => void;
   onProductClick?: (product: ProductType) => void;
   theme?: ThemeMode;
+  // Cart props for CartButton
+  cartItemCount?: number;
+  cartCheckoutUrl?: string | null;
+  cartLoading?: boolean;
+  onCartClick?: () => void;
 }
 
 const ProductPage: React.FC<ProductPageProps> = ({
@@ -25,7 +31,11 @@ const ProductPage: React.FC<ProductPageProps> = ({
   onBack,
   onAddToCart,
   onProductClick,
-  theme = 'seal'
+  theme = 'seal',
+  cartItemCount = 0,
+  cartCheckoutUrl = null,
+  cartLoading = false,
+  onCartClick
 }) => {
   // 取得其他產品（排除當前產品）- 使用 useMemo 優化性能
   const relatedProducts = useMemo(() => PRODUCTS.filter(p => p.id !== product.id), [product.id]);
@@ -45,7 +55,7 @@ const ProductPage: React.FC<ProductPageProps> = ({
       y: rect.top + rect.height / 2
     });
 
-    onAddToCart?.(product);
+    onAddToCart?.(product, quantity);
     setShowCartAnimation(true);
   };
 
@@ -458,6 +468,15 @@ const ProductPage: React.FC<ProductPageProps> = ({
         show={showCartAnimation}
         onComplete={() => setShowCartAnimation(false)}
         startPosition={animationStart}
+      />
+
+      {/* 購物車按鈕 */}
+      <CartButton
+        itemCount={cartItemCount}
+        checkoutUrl={cartCheckoutUrl}
+        loading={cartLoading}
+        theme={theme}
+        onCartClick={onCartClick}
       />
     </div>
   );

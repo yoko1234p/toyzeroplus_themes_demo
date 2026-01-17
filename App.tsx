@@ -153,12 +153,12 @@ const App: React.FC = () => {
   };
 
   // 處理加入購物車 - 支援 Shopify Product 同 MaximProduct
-  const handleAddToCart = async (product: Product | MaximProduct) => {
+  const handleAddToCart = async (product: Product | MaximProduct, quantity: number = 1) => {
     // 如果 product 已經有 variantId（Shopify Product），直接使用
     if ('variantId' in product && product.variantId) {
       try {
-        await addItem(product.variantId, 1);
-        console.log('Added to cart:', product.name);
+        await addItem(product.variantId, quantity);
+        console.log('Added to cart:', product.name, 'x', quantity);
         return;
       } catch (err) {
         console.error('Failed to add to cart:', err);
@@ -170,8 +170,8 @@ const App: React.FC = () => {
     const shopifyProduct = mappedShopifyProducts.find(p => p.name === product.name || p.id === product.id);
     if (shopifyProduct?.variantId) {
       try {
-        await addItem(shopifyProduct.variantId, 1);
-        console.log('Added to cart:', product.name);
+        await addItem(shopifyProduct.variantId, quantity);
+        console.log('Added to cart:', product.name, 'x', quantity);
       } catch (err) {
         console.error('Failed to add to cart:', err);
       }
@@ -246,7 +246,19 @@ const App: React.FC = () => {
   }
 
   if (view === 'product' && selectedMaximProduct) {
-    return <ProductPage product={selectedMaximProduct} onBack={handleBack} onProductClick={handleMaximProductClick} onAddToCart={handleAddToCart} theme={theme} />;
+    return (
+      <ProductPage
+        product={selectedMaximProduct}
+        onBack={handleBack}
+        onProductClick={handleMaximProductClick}
+        onAddToCart={handleAddToCart}
+        theme={theme}
+        cartItemCount={itemCount}
+        cartCheckoutUrl={checkoutUrl}
+        cartLoading={cartLoading}
+        onCartClick={handleCartClick}
+      />
+    );
   }
 
   const CornerLabel = ({ char, position }: { char: string, position: string }) => {

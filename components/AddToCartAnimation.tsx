@@ -27,11 +27,11 @@ const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
 
   if (!show) return null;
 
-  // 購物車按鈕位置（右下角 fixed bottom-6 right-6, w-14 h-14）
-  // bottom-6 = 24px, right-6 = 24px, 按鈕大小 = 56px
-  // 中心點: x = innerWidth - 24 - 28, y = innerHeight - 24 - 28
+  // 購物車按鈕位置（右下角 fixed bottom-20 right-6, w-14 h-14）
+  // bottom-20 = 80px, right-6 = 24px, 按鈕大小 = 56px
+  // 中心點: x = innerWidth - 24 - 28, y = innerHeight - 80 - 28
   const cartPosition = typeof window !== 'undefined'
-    ? { x: window.innerWidth - 52, y: window.innerHeight - 52 }
+    ? { x: window.innerWidth - 52, y: window.innerHeight - 108 }
     : { x: 0, y: 0 };
 
   return (

@@ -1,42 +1,74 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface AddToCartAnimationProps {
   show: boolean;
   onComplete: () => void;
+  startPosition?: { x: number; y: number };
 }
 
-const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({ show, onComplete }) => {
+const AddToCartAnimation: React.FC<AddToCartAnimationProps> = ({
+  show,
+  onComplete,
+  startPosition
+}) => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
   useEffect(() => {
     if (show) {
-      const timer = setTimeout(onComplete, 1500);
+      // 設定起始位置
+      if (startPosition) {
+        setPosition(startPosition);
+      }
+
+      const timer = setTimeout(onComplete, 800);
       return () => clearTimeout(timer);
     }
-  }, [show, onComplete]);
+  }, [show, onComplete, startPosition]);
 
   if (!show) return null;
 
+  // 購物車圖標位置（右上角）
+  const cartPosition = typeof window !== 'undefined'
+    ? { x: window.innerWidth - 40, y: 28 }
+    : { x: 0, y: 0 };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
-      <div className="animate-bounce-up bg-[#C83F49] text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2">
-        <svg className="w-5 h-5 animate-spin-once" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-        </svg>
-        <span className="font-bold">已加入購物車</span>
-      </div>
+    <div className="fixed inset-0 z-50 pointer-events-none overflow-hidden">
+      <div
+        className="absolute w-4 h-4 bg-[#C83F49] rounded-full shadow-lg animate-fly-to-cart"
+        style={{
+          '--start-x': `${position.x}px`,
+          '--start-y': `${position.y}px`,
+          '--end-x': `${cartPosition.x}px`,
+          '--end-y': `${cartPosition.y}px`,
+        } as React.CSSProperties}
+      />
       <style>{`
-        @keyframes bounce-up {
-          0% { transform: translateY(100px); opacity: 0; }
-          20% { transform: translateY(0); opacity: 1; }
-          80% { transform: translateY(0); opacity: 1; }
-          100% { transform: translateY(-50px); opacity: 0; }
+        @keyframes fly-to-cart {
+          0% {
+            left: var(--start-x);
+            top: var(--start-y);
+            transform: scale(1);
+            opacity: 1;
+          }
+          50% {
+            transform: scale(1.5);
+            opacity: 1;
+          }
+          80% {
+            transform: scale(0.8);
+            opacity: 1;
+          }
+          100% {
+            left: var(--end-x);
+            top: var(--end-y);
+            transform: scale(0.3);
+            opacity: 0;
+          }
         }
-        @keyframes spin-once {
-          0% { transform: scale(0); }
-          50% { transform: scale(1.2); }
-          100% { transform: scale(1); }
+        .animate-fly-to-cart {
+          animation: fly-to-cart 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
-        .animate-bounce-up { animation: bounce-up 1.5s ease-out forwards; }
-        .animate-spin-once { animation: spin-once 0.5s ease-out forwards; }
       `}</style>
     </div>
   );

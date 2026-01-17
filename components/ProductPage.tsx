@@ -32,10 +32,19 @@ const ProductPage: React.FC<ProductPageProps> = ({
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [showCartAnimation, setShowCartAnimation] = useState(false);
+  const [animationStart, setAnimationStart] = useState<{ x: number; y: number } | undefined>();
 
   // 處理加入購物車
   const handleAddToCartClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+
+    // 獲取按鈕位置作為動畫起點
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    setAnimationStart({
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2
+    });
+
     onAddToCart?.(product);
     setShowCartAnimation(true);
   };
@@ -448,6 +457,7 @@ const ProductPage: React.FC<ProductPageProps> = ({
       <AddToCartAnimation
         show={showCartAnimation}
         onComplete={() => setShowCartAnimation(false)}
+        startPosition={animationStart}
       />
     </div>
   );

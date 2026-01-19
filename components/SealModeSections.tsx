@@ -22,6 +22,7 @@ type ProductType = Product | MaximProduct;
 
 interface SealModeSectionsProps {
   onProductClick?: (product: ProductType) => void;
+  onAddToCart?: (product: ProductType) => void;
   showTextSections?: boolean;
   products?: Product[];
 }
@@ -68,6 +69,7 @@ const GridBox: React.FC<{
 
 const SealModeSections: React.FC<SealModeSectionsProps> = ({
   onProductClick,
+  onAddToCart,
   showTextSections = false,
   products: propProducts,
 }) => {
@@ -147,11 +149,11 @@ const SealModeSections: React.FC<SealModeSectionsProps> = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      onProductClick?.(p);
+                      onAddToCart?.(p);
                     }}
                     className="text-xs text-[#C83F49] font-bold border-b border-[#C83F49] pb-0.5 hover:text-[#B08D57] hover:border-[#B08D57] transition-colors"
                   >
-                    立即訂購
+                    添加至購物車
                   </button>
                 </div>
               </div>

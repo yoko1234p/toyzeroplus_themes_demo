@@ -25,6 +25,7 @@ interface ProductGridProps {
   onAcquire: (product: Product) => void;
   theme: ThemeMode;
   onProductClick?: (product: MaximProduct) => void;
+  onAddToCart?: (product: Product) => void;
   useShopify?: boolean; // 是否使用 Shopify 數據
 }
 
@@ -56,9 +57,10 @@ interface CardItemProps {
   idx: number;
   onAcquire: (product: Product) => void;
   onProductClick?: (product: MaximProduct) => void;
+  onAddToCart?: (product: Product) => void;
 }
 
-const CardItem: React.FC<CardItemProps> = ({ product, idx, onAcquire, onProductClick }) => {
+const CardItem: React.FC<CardItemProps> = ({ product, idx, onAcquire, onProductClick, onAddToCart }) => {
   const { ref, isVisible } = useScrollReveal();
 
   // Get MaximProduct to access highlightText
@@ -127,10 +129,10 @@ const CardItem: React.FC<CardItemProps> = ({ product, idx, onAcquire, onProductC
               {product.formattedPrice || (typeof product.price === 'number' ? `HK$${product.price}` : product.price)}
             </span>
             <button
-              onClick={(e) => { e.stopPropagation(); handleCardClick(); }}
+              onClick={(e) => { e.stopPropagation(); onAddToCart?.(product); }}
               className="text-xs text-[#C83F49] font-bold border-b border-[#C83F49] pb-0.5 hover:text-[#B08D57] hover:border-[#B08D57] transition-colors font-lhkk"
             >
-              立即訂購
+              添加至購物車
             </button>
           </div>
         </div>
@@ -139,7 +141,7 @@ const CardItem: React.FC<CardItemProps> = ({ product, idx, onAcquire, onProductC
   );
 };
 
-const ProductGrid: React.FC<ProductGridProps> = ({ onAcquire, theme, onProductClick, useShopify = false }) => {
+const ProductGrid: React.FC<ProductGridProps> = ({ onAcquire, theme, onProductClick, onAddToCart, useShopify = false }) => {
   // Conditionally fetch Shopify data from Happy Printing collection (hook is always called, but count=0 skips actual fetch)
   const { products: shopifyProducts, loading, error } = useShopifyProducts(
     useShopify ? { count: 20, collectionHandle: 'happy-printing' } : { count: 0 }
@@ -178,7 +180,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ onAcquire, theme, onProductCl
       <div className="py-12 px-4 md:px-8">
         <div className="flex flex-col md:flex-row gap-6 md:gap-8 justify-center items-stretch max-w-6xl mx-auto">
           {displayProducts.slice(0, 3).map((product, idx) => (
-            <CardItem key={product.id} product={product} idx={idx} onAcquire={onAcquire} onProductClick={onProductClick} />
+            <CardItem key={product.id} product={product} idx={idx} onAcquire={onAcquire} onProductClick={onProductClick} onAddToCart={onAddToCart} />
           ))}
         </div>
 

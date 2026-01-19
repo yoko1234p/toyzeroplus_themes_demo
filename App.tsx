@@ -371,6 +371,7 @@ const App: React.FC = () => {
         {/* Seal Mode Content Sections (Products only) */}
         <SealModeSections
           onProductClick={handleMaximProductClick}
+          onAddToCart={handleAddToCart}
           showTextSections={SHOW_TEXT_SECTIONS}
           products={mappedShopifyProducts}
         />
@@ -489,6 +490,7 @@ const App: React.FC = () => {
         {/* Seal Mode Content Sections */}
         <SealModeSections
           onProductClick={handleMaximProductClick}
+          onAddToCart={handleAddToCart}
           showTextSections={SHOW_TEXT_SECTIONS}
           products={mappedShopifyProducts}
         />
@@ -639,7 +641,7 @@ const App: React.FC = () => {
             </div>
           </FadeIn>
           <FadeIn delay={300}>
-            <ProductGrid onAcquire={handleAcquire} theme={theme} onProductClick={handleMaximProductClick} useShopify={true} />
+            <ProductGrid onAcquire={handleAcquire} theme={theme} onProductClick={handleMaximProductClick} onAddToCart={handleAddToCart} useShopify={true} />
           </FadeIn>
         </section>
 

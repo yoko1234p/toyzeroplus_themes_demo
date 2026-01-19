@@ -631,7 +631,7 @@ const App: React.FC = () => {
           <FadeIn className={`p-10 flex flex-col items-center gap-6 border-b transition-colors duration-500 ${styles.border} relative`}>
             <div className="w-full flex flex-row items-center justify-center gap-4">
               <img src="/hpc_logo.svg" alt="HPC Logo" className="h-16" />
-              <span className={`font-lhkk text-xl ${styles.text}`}>X</span>
+              <span className={`font-lhkk text-xl ${styles.textMain}`}>X</span>
               <img src="/house_logo.png" alt="House Logo" className="h-16" />
             </div>
             <p className={`text-center font-lhkk text-sm md:text-base leading-relaxed max-w-2xl ${styles.textSub}`}>

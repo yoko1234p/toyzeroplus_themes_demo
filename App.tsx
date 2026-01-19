@@ -563,7 +563,7 @@ const App: React.FC = () => {
           {/* Hero Text & Button (Fade in last) */}
           <div className={`max-w-md mt-12 transition-all duration-1000 ${(!isDark && lightModeStage < 3) ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
             <p className={`text-lg md:text-xl font-lhkk italic leading-relaxed mb-12 drop-shadow-sm transition-colors duration-500 ${styles.textSub}`}>
-              "如果記憶可以排版成鉛字，我希望這行字永遠不會被拆解。"
+              一個由1977年開始的名字 —— 快樂印刷公司<br />2026年，我們把「快樂」延續下去。
             </p>
             <button 
               onClick={() => {

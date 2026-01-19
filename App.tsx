@@ -572,7 +572,7 @@ const App: React.FC = () => {
               }}
               className={`group relative inline-flex items-center justify-center px-12 py-5 overflow-hidden font-bold tracking-widest text-xs uppercase transition-all duration-500 text-black font-lhkk ${styles.buttonBg}`}
             >
-              <span className={`relative z-10 ${isDark ? 'text-black' : 'text-white'}`}>按此</span>
+              <span className={`relative z-10 ${isDark ? 'text-black' : 'text-white'}`}>按此查看</span>
               <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity blur-xl"></div>
             </button>
           </div>
@@ -625,13 +625,16 @@ const App: React.FC = () => {
         )}
 
         <section id="essences" className={`transition-colors duration-500 ${isDark ? 'bg-[#080808]' : 'bg-[#fff]'}`}>
-          <FadeIn className={`px-10 py-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b transition-colors duration-500 ${styles.border}`}>
+          <FadeIn className={`p-10 flex flex-col items-center gap-6 border-b transition-colors duration-500 ${styles.border} relative`}>
             <div className="w-full flex flex-row items-center justify-center gap-4">
-              <img src="/hpc_logo.svg" alt="HPC Logo" className="h-10" />
+              <img src="/hpc_logo.svg" alt="HPC Logo" className="h-16" />
               <span className={`font-lhkk text-xl ${styles.text}`}>X</span>
-              <img src="/house_logo.png" alt="House Logo" className="h-10" />
+              <img src="/house_logo.png" alt="House Logo" className="h-16" />
             </div>
-            <div className={`text-[10px] tracking-widest font-bold uppercase px-4 py-2 border transition-colors duration-500 ${isDark ? 'text-zinc-600 bg-zinc-900/50 border-zinc-800' : 'text-black bg-white border-black'}`}>
+            <p className={`text-center font-lhkk text-sm md:text-base leading-relaxed max-w-2xl ${styles.textSub}`}>
+              今個新年，「快樂印刷」與港式茶室的佼佼者「福和雍」合作，由前福臨門老師傅黃志生師傅親自主理，用傳統而創新的味道為「快樂」率先編寫新的一章。
+            </p>
+            <div className={`lg:absolute lg:right-10 lg:top-1/2 lg:-translate-y-1/2 text-[10px] tracking-widest font-bold uppercase px-4 py-2 border transition-colors duration-500 ${isDark ? 'text-zinc-600 bg-zinc-900/50 border-zinc-800' : 'text-black bg-white border-black'}`}>
               快樂印刷出品 · 香港製造
             </div>
           </FadeIn>

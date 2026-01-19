@@ -242,8 +242,17 @@ const CartPage: React.FC<CartPageProps> = ({
 
         {/* Cart Summary */}
         <div className={`mt-6 ${styles.cardBg} border ${styles.border} p-6`}>
+          {/* 配送說明 */}
+          <div className={`mb-6 pb-6 border-b ${styles.border}`}>
+            <ul className={`text-sm ${styles.textSub} space-y-1`}>
+              <li>• 2-5個工作天內進行配送</li>
+              <li>• 線上購物滿 HK$500 免費送貨</li>
+              <li>• 食品出門，恕不退換</li>
+            </ul>
+          </div>
+
           <div className="flex justify-between items-center mb-6">
-            <span className={`text-lg ${styles.text}`}>總計</span>
+            <span className={`text-lg ${styles.text}`}>小計</span>
             <span className={`text-2xl font-bold ${styles.accent}`}>
               {totalAmount ? formatPrice(totalAmount.amount, totalAmount.currencyCode) : '-'}
             </span>

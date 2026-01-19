@@ -89,7 +89,7 @@ const CardItem: React.FC<CardItemProps> = ({ product, idx, onAcquire, onProductC
       <div className="h-full bg-white border-2 border-[#EAEAEA] hover:border-[#B08D57] transition-colors duration-500 relative">
         {/* Category Tag - 使用 Shopify tag，放喺 overflow-hidden 外面 */}
         {product.tag && (
-          <div className="absolute -top-2 -right-2 bg-[#C83F49] text-white text-[10px] py-1 px-2 font-lhkk tracking-widest writing-vertical-rl h-16 shadow-md z-20">
+          <div className="absolute -top-2 -right-2 bg-[#C83F49] text-white text-[12px] py-1 px-2 tracking-widest writing-vertical-rl h-16 shadow-md z-20">
             {product.tag}
           </div>
         )}
@@ -165,10 +165,11 @@ const ProductGrid: React.FC<ProductGridProps> = ({ onAcquire, theme, onProductCl
     useShopify ? { count: 20, collectionHandle: 'happy-printing' } : { count: 0 }
   );
 
-  // Use Shopify data or static data
-  const displayProducts = useShopify && shopifyProducts.length > 0
+  // Use Shopify data or static data (reversed order)
+  const displayProducts = (useShopify && shopifyProducts.length > 0
     ? mapShopifyProducts(shopifyProducts)
-    : PRODUCTS;
+    : PRODUCTS
+  ).slice().reverse();
 
   const isDark = theme === 'dark';
   const isCard = theme === 'card';
@@ -192,12 +193,12 @@ const ProductGrid: React.FC<ProductGridProps> = ({ onAcquire, theme, onProductCl
     console.warn('Shopify fetch failed, falling back to static data:', error);
   }
 
-  // Card Mode - Row Layout with 3 products
+  // Card Mode - Grid Layout
   if (isCard) {
     return (
       <div className="py-12 px-4 md:px-8">
-        <div className="flex flex-col md:flex-row gap-6 md:gap-8 justify-center items-stretch max-w-6xl mx-auto">
-          {displayProducts.slice(0, 3).map((product, idx) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
+          {displayProducts.map((product, idx) => (
             <CardItem key={product.id} product={product} idx={idx} onAcquire={onAcquire} onProductClick={onProductClick} onAddToCart={onAddToCart} />
           ))}
         </div>

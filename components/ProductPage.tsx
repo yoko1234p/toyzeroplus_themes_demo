@@ -250,13 +250,10 @@ const ProductPage: React.FC<ProductPageProps> = ({
             <div>
               {('descriptionHtml' in product && product.descriptionHtml) ? (
                 // Shopify HTML 描述
-                <>
-                  <div
-                    className={`text-base leading-relaxed font-lhkk ${styles.text} product-description-html`}
-                    dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
-                  />
-                  <span className={`text-base ${styles.textSub}`}>...</span>
-                </>
+                <div
+                  className={`text-base leading-relaxed font-lhkk ${styles.text} product-description-html`}
+                  dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+                />
               ) : (
                 // 純文字描述（支援 highlight）
                 <p className={`text-base leading-relaxed font-lhkk ${styles.text}`}>
@@ -272,11 +269,10 @@ const ProductPage: React.FC<ProductPageProps> = ({
                           {descText.split(highlightText)[0]}
                           <span className="product-highlight-text">{highlightText}</span>
                           {descText.split(highlightText).slice(1).join(highlightText)}
-                          <span className={styles.textSub}>...</span>
                         </>
                       );
                     }
-                    return <>{descText}<span className={styles.textSub}>...</span></>;
+                    return descText;
                   })()}
                 </p>
               )}

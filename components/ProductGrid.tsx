@@ -122,7 +122,22 @@ const CardItem: React.FC<CardItemProps> = ({ product, idx, onAcquire, onProductC
             <div className="w-8 h-px bg-[#333]/20 mx-auto mb-3"></div>
 
             <p className="text-sm text-[#333]/80 leading-relaxed font-lhkk mb-4 line-clamp-2 flex-grow">
-              {renderHighlightedText(product.description, maximProduct?.highlightText)}
+              {(() => {
+                const descText = (('detailedDescription' in product && product.detailedDescription)
+                  ? product.detailedDescription
+                  : product.description) || '';
+                const highlightText = ('detailedHighlightText' in product) ? product.detailedHighlightText : maximProduct?.highlightText;
+                if (highlightText && descText.includes(highlightText)) {
+                  return (
+                    <>
+                      {descText.split(highlightText)[0]}
+                      <span className="card-highlight-text">{highlightText}</span>
+                      {descText.split(highlightText).slice(1).join(highlightText)}
+                    </>
+                  );
+                }
+                return descText;
+              })()}
             </p>
           </div>
 

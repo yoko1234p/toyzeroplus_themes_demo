@@ -245,29 +245,37 @@ const ProductPage: React.FC<ProductPageProps> = ({
             )}
           </div>
 
-          {/* Description - 支援 detailedDescription (MaximProduct) 或 description (Product) */}
-          {(('detailedDescription' in product && product.detailedDescription) || product.description) && (
+          {/* Description - 優先使用 descriptionHtml (Shopify HTML)，fallback 到純文字 */}
+          {(('descriptionHtml' in product && product.descriptionHtml) || ('detailedDescription' in product && product.detailedDescription) || product.description) && (
             <div className={`py-6 border-t border-b ${styles.border}`}>
-              <p className={`text-base leading-relaxed font-lhkk ${styles.text}`}>
-                {(() => {
-                  // 優先使用 detailedDescription (MaximProduct)
-                  const descText = ('detailedDescription' in product && product.detailedDescription)
-                    ? product.detailedDescription
-                    : product.description;
-                  const highlightText = ('detailedHighlightText' in product) ? product.detailedHighlightText : undefined;
+              {('descriptionHtml' in product && product.descriptionHtml) ? (
+                // Shopify HTML 描述
+                <div
+                  className={`text-base leading-relaxed font-lhkk ${styles.text} product-description-html`}
+                  dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+                />
+              ) : (
+                // 純文字描述（支援 highlight）
+                <p className={`text-base leading-relaxed font-lhkk ${styles.text}`}>
+                  {(() => {
+                    const descText = ('detailedDescription' in product && product.detailedDescription)
+                      ? product.detailedDescription
+                      : product.description;
+                    const highlightText = ('detailedHighlightText' in product) ? product.detailedHighlightText : undefined;
 
-                  if (highlightText && descText.includes(highlightText)) {
-                    return (
-                      <>
-                        {descText.split(highlightText)[0]}
-                        <span className="product-highlight-text">{highlightText}</span>
-                        {descText.split(highlightText).slice(1).join(highlightText)}
-                      </>
-                    );
-                  }
-                  return descText;
-                })()}
-              </p>
+                    if (highlightText && descText.includes(highlightText)) {
+                      return (
+                        <>
+                          {descText.split(highlightText)[0]}
+                          <span className="product-highlight-text">{highlightText}</span>
+                          {descText.split(highlightText).slice(1).join(highlightText)}
+                        </>
+                      );
+                    }
+                    return descText;
+                  })()}
+                </p>
+              )}
             </div>
           )}
 
@@ -465,6 +473,31 @@ const ProductPage: React.FC<ProductPageProps> = ({
           padding: 2px 4px;
           box-decoration-break: clone;
           -webkit-box-decoration-break: clone;
+        }
+
+        /* Shopify HTML Description Styling */
+        .product-description-html p {
+          margin-bottom: 1em;
+        }
+        .product-description-html p:last-child {
+          margin-bottom: 0;
+        }
+        .product-description-html br {
+          display: block;
+          content: "";
+          margin-top: 0.5em;
+        }
+        .product-description-html strong,
+        .product-description-html b {
+          font-weight: bold;
+        }
+        .product-description-html ul,
+        .product-description-html ol {
+          margin-left: 1.5em;
+          margin-bottom: 1em;
+        }
+        .product-description-html li {
+          margin-bottom: 0.25em;
         }
       `}</style>
 

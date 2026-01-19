@@ -37,10 +37,8 @@ const useScrollReveal = () => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
+        // Fade in when entering, fade out when leaving
+        setIsVisible(entry.isIntersecting);
       },
       { threshold: 0.1 }
     );

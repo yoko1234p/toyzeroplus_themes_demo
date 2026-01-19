@@ -70,6 +70,7 @@ export function mapShopifyProductToProduct(
     image: firstImage?.url || "/placeholder.jpg",
     images: shopifyProduct.images.edges.map((e) => e.node.url),
     description: shopifyProduct.description,
+    descriptionHtml: shopifyProduct.descriptionHtml, // HTML 格式描述
     calligraphy: shopifyProduct.title, // 可以從 metafield 獲取
     variantId: firstVariant?.id, // Shopify variant ID for cart
     // Metafields

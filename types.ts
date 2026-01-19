@@ -17,6 +17,7 @@ export interface Product {
   image: string;
   images?: string[];
   description: string;
+  descriptionHtml?: string; // HTML 格式描述 from Shopify
   calligraphy: string;
   variantId?: string; // Shopify variant ID for cart
   // Metafields

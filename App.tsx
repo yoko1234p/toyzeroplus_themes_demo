@@ -563,7 +563,7 @@ const App: React.FC = () => {
           {/* Hero Text & Button (Fade in last) */}
           <div className={`max-w-md mt-12 transition-all duration-1000 ${(!isDark && lightModeStage < 3) ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'}`}>
             <p className={`text-lg md:text-xl font-lhkk italic leading-relaxed mb-12 drop-shadow-sm transition-colors duration-500 ${styles.textSub}`}>
-              一個由1977年開始的名字 —— 快樂印刷公司<br />2026年，我們把「快樂」延續下去。
+              "一個由1977年開始的名字 —— 快樂印刷公司<br />2026年，我們把「快樂」延續下去。"
             </p>
             <button 
               onClick={() => {
@@ -572,7 +572,7 @@ const App: React.FC = () => {
               }}
               className={`group relative inline-flex items-center justify-center px-12 py-5 overflow-hidden font-bold tracking-widest text-xs uppercase transition-all duration-500 text-black font-lhkk ${styles.buttonBg}`}
             >
-              <span className={`relative z-10 ${isDark ? 'text-black' : 'text-white'}`}>開始檢字</span>
+              <span className={`relative z-10 ${isDark ? 'text-black' : 'text-white'}`}>按此</span>
               <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity blur-xl"></div>
             </button>
           </div>
@@ -626,9 +626,10 @@ const App: React.FC = () => {
 
         <section id="essences" className={`transition-colors duration-500 ${isDark ? 'bg-[#080808]' : 'bg-[#fff]'}`}>
           <FadeIn className={`px-10 py-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b transition-colors duration-500 ${styles.border}`}>
-            <div>
-              <div className={`text-[10px] uppercase tracking-[0.6em] font-bold mb-2 font-lhkk ${styles.goldAccent}`}>賀年糕點</div>
-              <h2 className={`text-4xl md:text-5xl font-black italic uppercase tracking-tighter font-lhkk transition-colors duration-500 ${styles.textMain}`}>新春糕點禮券</h2>
+            <div className="w-full flex flex-row items-center justify-center gap-4">
+              <img src="/hpc_logo.svg" alt="HPC Logo" className="h-10" />
+              <span className={`font-lhkk text-xl ${styles.text}`}>X</span>
+              <img src="/house_logo.png" alt="House Logo" className="h-10" />
             </div>
             <div className={`text-[10px] tracking-widest font-bold uppercase px-4 py-2 border transition-colors duration-500 ${isDark ? 'text-zinc-600 bg-zinc-900/50 border-zinc-800' : 'text-black bg-white border-black'}`}>
               快樂印刷出品 · 香港製造

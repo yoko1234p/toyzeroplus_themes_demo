@@ -14,6 +14,7 @@ const Marquee: React.FC<MarqueeProps> = ({ theme }) => {
 
   return (
     <div className={`${containerClass} py-2 overflow-hidden whitespace-nowrap border-y uppercase font-bold text-xs tracking-[0.4em] flex transition-colors duration-500 relative w-full max-w-[100vw]`}>
+
       <div className="animate-marquee inline-block px-4 font-lhkk flex-shrink-0">
         快樂印刷公司・Since 1977
       </div>
@@ -26,7 +27,7 @@ const Marquee: React.FC<MarqueeProps> = ({ theme }) => {
           100% { transform: translateX(-50%); }
         }
         .animate-marquee {
-          animation: marquee 15s linear infinite;
+          animation: marquee 8s linear infinite;
         }
       `}</style>
     </div>

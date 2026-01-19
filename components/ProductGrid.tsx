@@ -24,7 +24,7 @@ const renderHighlightedText = (text: string, highlightText?: string) => {
 interface ProductGridProps {
   onAcquire: (product: Product) => void;
   theme: ThemeMode;
-  onProductClick?: (product: MaximProduct) => void;
+  onProductClick?: (product: Product | MaximProduct) => void;
   onAddToCart?: (product: Product) => void;
   useShopify?: boolean; // 是否使用 Shopify 數據
 }
@@ -56,7 +56,7 @@ interface CardItemProps {
   product: Product;
   idx: number;
   onAcquire: (product: Product) => void;
-  onProductClick?: (product: MaximProduct) => void;
+  onProductClick?: (product: Product | MaximProduct) => void;
   onAddToCart?: (product: Product) => void;
 }
 
@@ -68,8 +68,9 @@ const CardItem: React.FC<CardItemProps> = ({ product, idx, onAcquire, onProductC
 
   // Handle card click - go to product page if handler provided
   const handleCardClick = () => {
-    if (onProductClick && maximProduct) {
-      onProductClick(maximProduct);
+    if (onProductClick) {
+      // 直接傳 product，ProductPage 支援 Product 同 MaximProduct 兩種類型
+      onProductClick(product);
       return;
     }
     onAcquire(product);

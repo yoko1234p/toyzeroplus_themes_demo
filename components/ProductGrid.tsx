@@ -87,17 +87,19 @@ const CardItem: React.FC<CardItemProps> = ({ product, idx, onAcquire, onProductC
     >
       {/* Voucher Style Card */}
       <div className="h-full bg-white border-2 border-[#EAEAEA] hover:border-[#B08D57] transition-colors duration-500 relative">
-        {/* Category Tag - 放喺 overflow-hidden 外面 */}
-        <div className="absolute -top-2 -right-2 bg-[#C83F49] text-white text-[10px] py-1 px-2 font-lhkk tracking-widest writing-vertical-rl h-16 shadow-md z-20">
-          {product.category === '蘿蔔糕' ? '蘿蔔糕' : product.category === '芋頭糕' ? '芋頭糕' : '糕點'}
-        </div>
+        {/* Category Tag - 使用 Shopify tag，放喺 overflow-hidden 外面 */}
+        {product.tag && (
+          <div className="absolute -top-2 -right-2 bg-[#C83F49] text-white text-[10px] py-1 px-2 font-lhkk tracking-widest writing-vertical-rl h-16 shadow-md z-20">
+            {product.tag}
+          </div>
+        )}
 
         {/* Inner Container */}
         <div className="h-full border border-[#333]/10 m-2 p-4 flex flex-col relative overflow-hidden">
 
-          {/* Cutout Circles (Voucher effect) */}
-          <div className="absolute top-1/2 -left-4 w-6 h-6 bg-[#f4f4f0] rounded-full border border-[#EAEAEA]"></div>
-          <div className="absolute top-1/2 -right-4 w-6 h-6 bg-[#f4f4f0] rounded-full border border-[#EAEAEA]"></div>
+          {/* Cutout Circles (Voucher effect) - 垂直居中 */}
+          <div className="absolute top-1/2 -translate-y-1/2 -left-4 w-6 h-6 bg-[#f4f4f0] rounded-full border border-[#EAEAEA]"></div>
+          <div className="absolute top-1/2 -translate-y-1/2 -right-4 w-6 h-6 bg-[#f4f4f0] rounded-full border border-[#EAEAEA]"></div>
 
           {/* Image Area */}
           <div className="w-full aspect-square mb-4 overflow-hidden bg-gradient-to-b from-[#f5f5f0] to-[#e8e6dc] flex items-center justify-center">

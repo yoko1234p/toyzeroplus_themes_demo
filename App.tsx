@@ -539,8 +539,8 @@ const App: React.FC = () => {
 
         {/* Side Calligraphy (Vertical) */}
         <div className={`transition-opacity duration-1000 ${(!isDark && lightModeStage < 3) ? 'opacity-0' : 'opacity-100'}`}>
-          <CalligraphySection text="活版" theme={theme} className="absolute left-20 top-1/2 -translate-y-1/2 hidden lg:block" />
-          <CalligraphySection text="排版" theme={theme} className="absolute right-20 top-1/2 -translate-y-1/2 hidden lg:block" />
+          <CalligraphySection text="恭賀新禧" theme={theme} className="absolute left-20 top-1/2 -translate-y-1/2 hidden lg:block" />
+          <CalligraphySection text="馬年騰飛" theme={theme} className="absolute right-20 top-1/2 -translate-y-1/2 hidden lg:block" />
         </div>
 
         <FadeIn className="relative z-10 text-center flex flex-col items-center">

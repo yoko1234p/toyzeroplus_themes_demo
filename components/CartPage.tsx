@@ -4,7 +4,7 @@
  * 支援數量更新及移除產品
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { ThemeMode } from '../types';
 import { ShopifyCart, ShopifyCartLineItem } from '../services/shopify';
 
@@ -14,6 +14,7 @@ interface CartPageProps {
   onBack: () => void;
   onUpdateItem: (lineId: string, quantity: number) => Promise<void>;
   onRemoveItem: (lineId: string) => Promise<void>;
+  onClearCart?: () => Promise<void>;
   theme?: ThemeMode;
 }
 
@@ -23,8 +24,10 @@ const CartPage: React.FC<CartPageProps> = ({
   onBack,
   onUpdateItem,
   onRemoveItem,
+  onClearCart,
   theme = 'seal',
 }) => {
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
   const isSeal = theme !== 'dark';
   const isDark = theme === 'dark';
 
@@ -152,7 +155,21 @@ const CartPage: React.FC<CartPageProps> = ({
       </button>
 
       <div className="max-w-4xl mx-auto">
-        <h1 className={`text-3xl md:text-4xl font-bold mb-8 font-lhkk ${styles.text}`}>購物車</h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className={`text-3xl md:text-4xl font-bold font-lhkk ${styles.text}`}>購物車</h1>
+          {cartItems.length > 0 && (
+            <button
+              onClick={() => setShowClearConfirm(true)}
+              disabled={loading}
+              className={`text-sm ${styles.textSub} hover:${styles.accent} transition-colors flex items-center gap-1 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              清空購物車
+            </button>
+          )}
+        </div>
 
         {/* Loading overlay */}
         {loading && (
@@ -296,6 +313,36 @@ const CartPage: React.FC<CartPageProps> = ({
           </div>
         </div>
       </div>
+
+      {/* 清空購物車確認 Modal */}
+      {showClearConfirm && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className={`${styles.cardBg} border ${styles.border} p-6 max-w-sm w-full`}>
+            <h3 className={`text-lg font-bold mb-4 font-lhkk ${styles.text}`}>確認清空購物車？</h3>
+            <p className={`text-sm mb-6 ${styles.textSub}`}>此操作將移除購物車內所有商品，確定要繼續嗎？</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowClearConfirm(false)}
+                className={`flex-1 py-2 px-4 border font-bold transition-all duration-300 ${styles.buttonOutline}`}
+              >
+                取消
+              </button>
+              <button
+                onClick={async () => {
+                  setShowClearConfirm(false);
+                  if (onClearCart) {
+                    await onClearCart();
+                  }
+                }}
+                disabled={loading}
+                className={`flex-1 py-2 px-4 font-bold transition-all duration-300 ${styles.button}`}
+              >
+                確認清空
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

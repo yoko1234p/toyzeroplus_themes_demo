@@ -9,6 +9,7 @@ interface UseShopifyCartResult {
   addItem: (variantId: string, quantity?: number) => Promise<void>;
   updateItem: (lineId: string, quantity: number) => Promise<void>;
   removeItem: (lineId: string) => Promise<void>;
+  clearCart: () => Promise<void>;
   checkoutUrl: string | null;
   itemCount: number;
   refreshCart: () => Promise<void>;
@@ -90,6 +91,29 @@ export function useShopifyCart(): UseShopifyCartResult {
     }
   }, []);
 
+  const clearCart = useCallback(async () => {
+    if (!cart?.lines?.edges || cart.lines.edges.length === 0) return;
+
+    const cartId = getStoredCartId();
+    if (!cartId) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // 逐個移除所有 items
+      for (const edge of cart.lines.edges) {
+        await removeCartLine(cartId, edge.node.id);
+      }
+      await refreshCart();
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to clear cart'));
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [cart, refreshCart]);
+
   return {
     cart,
     loading,
@@ -97,6 +121,7 @@ export function useShopifyCart(): UseShopifyCartResult {
     addItem,
     updateItem,
     removeItem,
+    clearCart,
     checkoutUrl: cart?.checkoutUrl || null,
     itemCount: cart?.totalQuantity || 0,
     refreshCart,

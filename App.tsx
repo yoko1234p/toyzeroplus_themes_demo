@@ -50,7 +50,7 @@ const App: React.FC = () => {
     count: 20,
     collectionHandle: 'happy-printing'
   });
-  const { cart, addItem, updateItem, removeItem, checkoutUrl, itemCount, loading: cartLoading } = useShopifyCart();
+  const { cart, addItem, updateItem, removeItem, clearCart, checkoutUrl, itemCount, loading: cartLoading } = useShopifyCart();
 
   // Map Shopify products to local Product type
   const mappedShopifyProducts = shopifyProducts.length > 0 ? mapShopifyProducts(shopifyProducts) : [];
@@ -240,6 +240,7 @@ const App: React.FC = () => {
         onBack={handleBack}
         onUpdateItem={updateItem}
         onRemoveItem={removeItem}
+        onClearCart={clearCart}
         theme={theme}
       />
     );

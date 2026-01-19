@@ -70,10 +70,6 @@ const GreetingCardKV: React.FC<GreetingCardKVProps> = ({ stage }) => {
           />
         </div>
 
-        {/* Card Footer Text */}
-        <div className={`absolute bottom-10 text-center transition-opacity duration-1000 ${stage >= 2 ? 'opacity-100' : 'opacity-0'}`}>
-          <p className="text-[10px] tracking-[0.4em] text-red-900/60 font-serif uppercase">Est. 1977 Kowloon</p>
-        </div>
       </div>
 
       {/* Shadow / Reflection Element */}
